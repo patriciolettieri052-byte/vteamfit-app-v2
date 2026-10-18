@@ -67,7 +67,7 @@ export default function DayRoutinePage({ params }: DayPageProps) {
   }, [activePlan?.id, weekNumber, dayNumber]);
 
   const exercises: WorkoutExerciseItem[] = Array.isArray(workout?.exercises)
-    ? [...workout!.exercises].sort((a, b) => (a.order || 0) - (b.order || 0))
+    ? [...workout!.exercises].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     : [];
 
   // Find current workout log for this workout.id (whether progressive or completed)

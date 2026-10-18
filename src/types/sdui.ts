@@ -108,7 +108,7 @@ export function getExerciseSlug(ex: WorkoutExerciseItem): string {
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
-  return `${slugified}-o${ex.order || 1}`;
+  return `${slugified}-o${ex.order ?? 0}`;
 }
 
 /**

@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Play, CheckCircle2, Dumbbell } from "lucide-react";
+import { Play, CheckCircle2, Dumbbell, Flame } from "lucide-react";
 import { getExerciseSlug, getExerciseThumbnail, type WorkoutExerciseItem } from "@/types/sdui";
 
 interface ExerciseCardSDUIProps {
@@ -21,8 +21,15 @@ export function ExerciseCardSDUI({
     exercise.name ||
     exercise.name_override ||
     slug.replace(/_/g, " ").replace(/-/g, " ");
-  const setsValue = exercise.series ?? exercise.sets ?? "3";
-  const repsValue = exercise.reps ?? "10";
+
+  const isWarmup =
+    exercise.order === 0 ||
+    (exercise.category || "").toUpperCase() === "CALENTAMIENTO";
+  const hasPrescription = Boolean(
+    exercise.series || exercise.sets || exercise.reps
+  );
+  const setsValue = exercise.series ?? exercise.sets ?? (isWarmup ? "1" : "3");
+  const repsValue = exercise.reps ?? (isWarmup ? "Bloque" : "10");
   const thumbnailUrl = getExerciseThumbnail(exercise);
 
   return (
@@ -49,7 +56,11 @@ export function ExerciseCardSDUI({
             />
           ) : (
             <div className="h-full w-full flex flex-col items-center justify-center bg-zinc-900 text-zinc-500">
-              <Dumbbell className="h-5 w-5 mb-0.5 text-[#A08A56]/60" />
+              {isWarmup ? (
+                <Flame className="h-5 w-5 mb-0.5 text-[#A08A56]" />
+              ) : (
+                <Dumbbell className="h-5 w-5 mb-0.5 text-[#A08A56]/60" />
+              )}
             </div>
           )}
 
@@ -88,27 +99,40 @@ export function ExerciseCardSDUI({
 
       {/* Prescription Pills + Play Icon */}
       <div className="flex items-center gap-3 shrink-0 tabular-nums">
-        <div className="hidden sm:flex items-center gap-2">
-          <div className="rounded bg-zinc-900/90 border border-white/10 px-2.5 py-1 text-center">
-            <span className="block text-[9px] font-bold uppercase tracking-widest text-zinc-500">
-              SERIES
-            </span>
-            <span className="text-xs font-black text-white">{setsValue}</span>
-          </div>
-          <div className="rounded bg-zinc-900/90 border border-white/10 px-2.5 py-1 text-center">
-            <span className="block text-[9px] font-bold uppercase tracking-widest text-zinc-500">
-              REPS
-            </span>
-            <span className="text-xs font-black text-white">{repsValue}</span>
-          </div>
-        </div>
+        {hasPrescription ? (
+          <>
+            <div className="hidden sm:flex items-center gap-2">
+              <div className="rounded bg-zinc-900/90 border border-white/10 px-2.5 py-1 text-center">
+                <span className="block text-[9px] font-bold uppercase tracking-widest text-zinc-500">
+                  SERIES
+                </span>
+                <span className="text-xs font-black text-white">{setsValue}</span>
+              </div>
+              <div className="rounded bg-zinc-900/90 border border-white/10 px-2.5 py-1 text-center">
+                <span className="block text-[9px] font-bold uppercase tracking-widest text-zinc-500">
+                  REPS
+                </span>
+                <span className="text-xs font-black text-white">{repsValue}</span>
+              </div>
+            </div>
 
-        {/* Compact mobile prescription */}
-        <div className="flex sm:hidden flex-col items-end text-right">
-          <span className="text-xs font-black text-white">
-            {setsValue} × {repsValue}
-          </span>
-        </div>
+            {/* Compact mobile prescription */}
+            <div className="flex sm:hidden flex-col items-end text-right">
+              <span className="text-xs font-black text-white">
+                {setsValue} × {repsValue}
+              </span>
+            </div>
+          </>
+        ) : (
+          <div className="rounded bg-zinc-900/90 border border-[#A08A56]/30 px-2.5 py-1 text-center">
+            <span className="block text-[8px] font-bold uppercase tracking-widest text-[#A08A56]">
+              RUTINA
+            </span>
+            <span className="text-[11px] font-black uppercase text-white">
+              ACTIVACIÓN
+            </span>
+          </div>
+        )}
 
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-900 border border-white/10 text-zinc-300 group-hover:border-[#A08A56] group-hover:text-[#A08A56] transition-colors">
           {isCompleted ? (
