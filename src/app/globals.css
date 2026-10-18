@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   VTEAMFIT DESIGN SYSTEM v2.0 (W3C DTCG 2025.10 + OKLCH + Fluid Clamp + CUBE)
+   Strict Brand DNA: Black (#000000), Carbon (#050505 + texture), White (#FFFFFF),
+   Gold (#A08A56 / oklch(0.641 0.075 87.4)), Helvetica Neue.
+   ============================================================================ */
+
+:root {
+  /* 1. Primitive Tokens (OKLCH + Hex Fallback) */
+  --color-primitive-black: oklch(0 0 0);               /* #000000 */
+  --color-primitive-carbon: oklch(0.119 0 0);          /* #050505 */
+  --color-primitive-zinc-950: oklch(0.141 0.005 285.8);/* #09090B */
+  --color-primitive-zinc-900: oklch(0.21 0.006 285.9); /* #18181B */
+  --color-primitive-zinc-800: oklch(0.274 0.006 286.0);/* #27272A */
+  --color-primitive-zinc-700: oklch(0.37 0.013 285.8); /* #3F3F46 */
+  --color-primitive-zinc-500: oklch(0.552 0.016 285.9);/* #71717A */
+  --color-primitive-zinc-400: oklch(0.705 0.015 286.0);/* #A1A1AA */
+  --color-primitive-zinc-300: oklch(0.871 0.006 286.3);/* #D4D4D8 */
+  --color-primitive-white: oklch(1 0 0);               /* #FFFFFF */
+
+  /* Brand Gold */
+  --color-primitive-gold-500: oklch(0.641 0.075 87.4); /* #A08A56 */
+  --color-primitive-gold-400: oklch(0.715 0.082 87.4); /* #B59E68 */
+  --color-primitive-gold-600: oklch(0.555 0.068 87.4); /* #867244 */
+
+  /* Semantic Status */
+  --color-primitive-emerald-500: oklch(0.696 0.17 162.48); /* #10B981 */
+  --color-primitive-red-500: oklch(0.637 0.237 25.33);     /* #EF4444 */
+
+  /* 2. Semantic Tokens */
+  --surface-canvas: var(--color-primitive-carbon);
+  --surface-elevated: rgba(9, 9, 11, 0.85);
+  --surface-card: rgba(0, 0, 0, 0.80);
+  --surface-header: rgba(0, 0, 0, 0.90);
+  --surface-secondary-btn: var(--color-primitive-zinc-800);
+
+  --text-primary: var(--color-primitive-white);
+  --text-secondary: var(--color-primitive-zinc-400);
+  --text-muted: var(--color-primitive-zinc-500);
+  --text-secondary-btn: var(--color-primitive-zinc-300);
+  --text-accent: var(--color-primitive-gold-500);
+  --text-on-accent: var(--color-primitive-black);
+
+  --accent-primary: var(--color-primitive-gold-500);
+  --accent-primary-hover: var(--color-primitive-gold-400);
+  --accent-glow: rgba(160, 138, 86, 0.25);
+
+  --border-subtle: rgba(255, 255, 255, 0.10);
+  --border-secondary-btn: var(--color-primitive-zinc-700);
+  --border-accent: var(--color-primitive-gold-500);
+
+  /* 3. Typography & Fluid Sizing (clamp) */
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --text-display-hero: clamp(2.25rem, 1.5rem + 3.2vw, 3.75rem);
+  --text-heading-1: clamp(1.75rem, 1.35rem + 1.8vw, 2.5rem);
+  --text-heading-2: clamp(1.375rem, 1.15rem + 1vw, 1.875rem);
+  --text-heading-3: clamp(1.125rem, 1.05rem + 0.4vw, 1.25rem);
+  --text-body-base: clamp(0.875rem, 0.83rem + 0.2vw, 1rem);
+  --text-caption: 0.75rem;
+  --text-micro: 0.625rem;
+
+  /* 4. 8pt Spatial System */
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-8: 2rem;     /* 32px */
+  --space-12: 3rem;    /* 48px */
+  --space-16: 4rem;    /* 64px */
+}
+
+/* Base Canvas & Texture */
+html,
+body {
+  background-color: #050505;
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+.bg-carbon-canvas {
+  background-color: #050505;
+  background-image:
+    radial-gradient(ellipse at center, rgba(5, 5, 5, 0.25) 0%, rgba(5, 5, 5, 0.85) 100%),
+    url('/images/carbon-texture-v4.webp');
+  background-repeat: repeat;
+  background-size: 500px auto;
+  background-attachment: fixed;
+}
+
+/* Numeric Tabular Discipline */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* CUBE CSS Layout Primitives */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, var(--space-4));
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cluster-gap, var(--space-3));
+}
+
+/* State-Driven Selectors (CUBE Exceptions) */
+[data-state="active"],
+[data-featured="true"] {
+  border-color: #A08A56;
+  box-shadow: 0 0 25px -5px rgba(160, 138, 86, 0.25);
+}
+
+[data-state="completed"] {
+  border-color: rgba(16, 185, 129, 0.45);
+}
+
+[data-state="loading"] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Focus Ring WCAG 2.2 AA (2.4.11 Focus Appearance) */
+:focus-visible {
+  outline: 2px solid #A08A56;
+  outline-offset: 2px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272A;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A08A56;
+}
