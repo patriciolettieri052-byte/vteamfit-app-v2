@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     const supabase = createServerSupabase();
 
-    // Check if user already exists in auth or v2.user_profiles
+    // Check if user already exists in v2.user_profiles
     const { data: existingProfile } = await supabase
       .from("user_profiles")
       .select("*")
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Upsert row in v2.user_profiles
+    // Upsert row in v2.user_profiles using exact schema columns
     const { data: profile, error: profileError } = await supabase
       .from("user_profiles")
       .upsert(
@@ -65,8 +65,7 @@ export async function POST(req: NextRequest) {
           id: userId,
           email,
           full_name: fullName || email.split("@")[0],
-          role: "user",
-          onboarding_completed: false,
+          role: "student",
         },
         { onConflict: "id" }
       )
@@ -85,7 +84,7 @@ export async function POST(req: NextRequest) {
         userId: profile.id,
         email: profile.email,
         fullName: profile.full_name || "",
-        role: profile.role,
+        role: profile.role || "student",
       },
       profile,
     });

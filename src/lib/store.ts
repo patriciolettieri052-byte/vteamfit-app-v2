@@ -13,7 +13,7 @@ export interface VTeamClientSession {
   userId: string;
   email: string;
   fullName: string;
-  role: "user" | "coach" | "admin";
+  role: "student" | "user" | "coach" | "admin";
   activePlanSlug?: string;
 }
 
@@ -38,6 +38,11 @@ export function setStoredSession(session: VTeamClientSession | null) {
     localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
   }
   window.dispatchEvent(new Event("vteamfit-session-change"));
+}
+
+function normalizeIdentifier(val: string | undefined | null): string {
+  if (!val) return "";
+  return val.trim().toLowerCase().replace(/_/g, "-");
 }
 
 export interface DashboardHydratedState {
@@ -112,18 +117,15 @@ export function useVTeamStore(): DashboardHydratedState {
     return () => window.removeEventListener("vteamfit-session-change", handleStorage);
   }, [loadState]);
 
-  const switchActivePlan = useCallback(
-    (planSlug: string) => {
-      const current = getStoredSession();
-      if (!current) return;
-      const updated = { ...current, activePlanSlug: planSlug };
-      setStoredSession(updated);
-      setSession(updated);
-    },
-    []
-  );
+  const switchActivePlan = useCallback((planSlug: string) => {
+    const current = getStoredSession();
+    if (!current) return;
+    const updated = { ...current, activePlanSlug: planSlug };
+    setStoredSession(updated);
+    setSession(updated);
+  }, []);
 
-  // Determine activeEnrollment and activePlan
+  // Determine activeEnrollment and activePlan normalizing hyphens and underscores
   const activeEnrollments = enrollments.filter((e) => e.status === "active");
   const isStaff = profile?.role === "admin" || profile?.role === "coach";
 
@@ -131,21 +133,46 @@ export function useVTeamStore(): DashboardHydratedState {
   let activeEnrollment: UserEnrollmentRow | null = null;
 
   if (session?.activePlanSlug) {
+    const targetNorm = normalizeIdentifier(session.activePlanSlug);
     activeEnrollment =
-      activeEnrollments.find((e) => e.plan?.slug === session.activePlanSlug) || null;
+      activeEnrollments.find(
+        (e) =>
+          normalizeIdentifier(e.plan?.slug) === targetNorm ||
+          normalizeIdentifier(e.plan?.id) === targetNorm ||
+          normalizeIdentifier(e.plan_id) === targetNorm
+      ) || null;
+
     activePlan =
       activeEnrollment?.plan ||
-      (isStaff ? allPlans.find((p) => p.slug === session.activePlanSlug) || null : null);
+      allPlans.find(
+        (p) =>
+          normalizeIdentifier(p.slug) === targetNorm ||
+          normalizeIdentifier(p.id) === targetNorm
+      ) ||
+      null;
+
+    // If user is not staff and not enrolled in activePlanSlug, clear activePlan so fallback picks their real active enrollment
+    if (!isStaff && !activeEnrollment) {
+      activePlan = null;
+    }
   }
 
   if (!activePlan) {
     if (activeEnrollments.length > 0) {
       activeEnrollment = activeEnrollments[0];
-      activePlan = activeEnrollment.plan || null;
-    } else if (isStaff && allPlans.length > 0) {
-      // Default to plan_padel for staff if they have no explicit enrollment
       activePlan =
-        allPlans.find((p) => p.slug === "plan_padel") || allPlans[0] || null;
+        activeEnrollment.plan ||
+        allPlans.find(
+          (p) =>
+            normalizeIdentifier(p.id) === normalizeIdentifier(activeEnrollment!.plan_id) ||
+            normalizeIdentifier(p.slug) === normalizeIdentifier(activeEnrollment!.plan_id)
+        ) ||
+        null;
+    } else if (isStaff && allPlans.length > 0) {
+      activePlan =
+        allPlans.find((p) => p.id === "plan_padel" || p.slug === "plan-padel") ||
+        allPlans[0] ||
+        null;
     }
   }
 

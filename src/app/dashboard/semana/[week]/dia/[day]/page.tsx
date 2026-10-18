@@ -97,21 +97,22 @@ export default function DayRoutinePage({ params }: DayPageProps) {
     if (!session?.userId || !workout) return;
     setCompletingDay(true);
     try {
-      const nextDay = dayNumber < 6 ? dayNumber + 1 : 1;
-      const nextWeek = dayNumber < 6 ? weekNumber : weekNumber + 1;
+      const nextWeek = dayNumber >= 6 ? weekNumber + 1 : weekNumber;
 
       const res = await fetch("/api/workout-logs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: session.userId,
+          planId: workout.plan_id,
           workoutId: workout.id,
+          weekNumber,
+          dayName: workout.day_name || `DÍA ${dayNumber}`,
           enrollmentId: activeEnrollment?.id || null,
           action: "complete_day",
           durationSeconds: (workout.estimated_duration_min || 45) * 60,
           rpeRating: 8,
           nextWeek,
-          nextDay,
         }),
       });
 
@@ -129,6 +130,11 @@ export default function DayRoutinePage({ params }: DayPageProps) {
       setCompletingDay(false);
     }
   };
+
+  const dayHeaderTitle =
+    workout?.day_name || workout?.title || `Día ${dayNumber}`;
+  const dayHeaderSubtitle =
+    workout?.focus || workout?.description || workout?.warmup_instructions;
 
   return (
     <div className="min-h-screen pb-32 flex flex-col">
@@ -154,11 +160,11 @@ export default function DayRoutinePage({ params }: DayPageProps) {
               className="font-black uppercase tracking-tight text-white"
               style={{ fontSize: "var(--text-heading-1)" }}
             >
-              {workout?.title || `Día ${dayNumber}`}
+              {dayHeaderTitle}
             </h1>
-            {workout?.description && (
+            {dayHeaderSubtitle && (
               <p className="text-xs sm:text-sm text-zinc-400 mt-2">
-                {workout.description}
+                {dayHeaderSubtitle}
               </p>
             )}
           </div>

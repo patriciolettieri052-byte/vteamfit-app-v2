@@ -11,12 +11,12 @@ export async function GET(req: NextRequest) {
 
     const supabase = createServerSupabase();
 
-    // If requesting a single exercise catalog item by slug
+    // In v2.exercises, primary key is 'id' (slug)
     if (exerciseSlug) {
       const { data: exercise } = await supabase
         .from("exercises")
         .select("*")
-        .eq("slug", exerciseSlug)
+        .eq("id", exerciseSlug)
         .maybeSingle();
 
       return NextResponse.json({ exercise: exercise || null });
@@ -24,10 +24,14 @@ export async function GET(req: NextRequest) {
 
     let resolvedPlanId = planId;
     if (!resolvedPlanId && planSlug) {
+      const normalizedSlug = planSlug.replace(/_/g, "-");
+      const underscoreSlug = planSlug.replace(/-/g, "_");
       const { data: plan } = await supabase
         .from("plans")
         .select("id")
-        .eq("slug", planSlug)
+        .or(
+          `slug.eq.${planSlug},slug.eq.${normalizedSlug},slug.eq.${underscoreSlug},id.eq.${planSlug},id.eq.${underscoreSlug}`
+        )
         .maybeSingle();
       resolvedPlanId = plan?.id || null;
     }

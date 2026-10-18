@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
           .from("user_enrollments")
           .select("*, plan:plans(*)")
           .eq("user_id", userId)
-          .order("started_at", { ascending: false }),
+          .order("created_at", { ascending: false }),
         supabase
           .from("plans")
           .select("*")
@@ -32,13 +32,25 @@ export async function GET(req: NextRequest) {
           .from("user_weight_logs")
           .select("*")
           .eq("user_id", userId)
-          .order("logged_at", { ascending: false }),
+          .order("recorded_date", { ascending: false }),
       ]);
+
+    // Attach plan object from plansRes if PostgREST relation join didn't populate it
+    const plansList = plansRes.data || [];
+    const enrollmentsList = (enrollmentsRes.data || []).map((enr) => {
+      if (!enr.plan && enr.plan_id) {
+        const matchedPlan = plansList.find(
+          (p) => p.id === enr.plan_id || p.slug === enr.plan_id
+        );
+        return { ...enr, plan: matchedPlan || null };
+      }
+      return enr;
+    });
 
     return NextResponse.json({
       profile: profileRes.data || null,
-      enrollments: enrollmentsRes.data || [],
-      plans: plansRes.data || [],
+      enrollments: enrollmentsList,
+      plans: plansList,
       workoutLogs: workoutLogsRes.data || [],
       weightLogs: weightLogsRes.data || [],
     });
@@ -61,7 +73,6 @@ export async function PATCH(req: NextRequest) {
       age,
       weight_kg,
       height_cm,
-      onboarding_completed,
       log_new_weight,
     } = body;
 
@@ -71,16 +82,18 @@ export async function PATCH(req: NextRequest) {
 
     const supabase = createServerSupabase();
 
+    // Only update columns that exist in v2.user_profiles
     const updatePayload: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
     };
     if (full_name !== undefined) updatePayload.full_name = full_name;
     if (gender !== undefined) updatePayload.gender = gender;
-    if (age !== undefined) updatePayload.age = Number(age);
-    if (weight_kg !== undefined) updatePayload.weight_kg = Number(weight_kg);
-    if (height_cm !== undefined) updatePayload.height_cm = Number(height_cm);
-    if (onboarding_completed !== undefined) {
-      updatePayload.onboarding_completed = Boolean(onboarding_completed);
+    if (age !== undefined && age !== null) updatePayload.age = Number(age);
+    if (weight_kg !== undefined && weight_kg !== null) {
+      updatePayload.weight_kg = Number(weight_kg);
+    }
+    if (height_cm !== undefined && height_cm !== null) {
+      updatePayload.height_cm = Number(height_cm);
     }
 
     const { data: profile, error: updateError } = await supabase
@@ -94,12 +107,12 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: updateError.message }, { status: 500 });
     }
 
-    // If weight was provided during onboarding or explicit weight update, record in v2.user_weight_logs
+    // Record weight in v2.user_weight_logs using exact columns (user_id, weight_kg, recorded_date)
     if (weight_kg !== undefined && Number(weight_kg) > 0 && log_new_weight !== false) {
       await supabase.from("user_weight_logs").insert({
         user_id: userId,
         weight_kg: Number(weight_kg),
-        notes: onboarding_completed ? "Peso inicial de onboarding" : "Actualización de perfil",
+        recorded_date: new Date().toISOString().slice(0, 10),
       });
     }
 

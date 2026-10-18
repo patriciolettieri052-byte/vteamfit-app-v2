@@ -1,5 +1,5 @@
 import React from "react";
-import type { WorkoutExerciseItem } from "@/types/sdui";
+import { getExerciseSlug, type WorkoutExerciseItem } from "@/types/sdui";
 import { ExerciseCardSDUI } from "./ExerciseCardSDUI";
 
 interface CategoryExerciseGroupProps {
@@ -18,7 +18,7 @@ export function CategoryExerciseGroup({
   completedSlugs,
 }: CategoryExerciseGroupProps) {
   const completedCount = exercises.filter((ex) =>
-    completedSlugs.has(ex.exercise_slug)
+    completedSlugs.has(getExerciseSlug(ex))
   ).length;
 
   return (
@@ -36,15 +36,18 @@ export function CategoryExerciseGroup({
       </div>
 
       <div className="space-y-2.5">
-        {exercises.map((ex) => (
-          <ExerciseCardSDUI
-            key={`${ex.order}-${ex.exercise_slug}`}
-            exercise={ex}
-            weekNumber={weekNumber}
-            dayNumber={dayNumber}
-            isCompleted={completedSlugs.has(ex.exercise_slug)}
-          />
-        ))}
+        {exercises.map((ex) => {
+          const slug = getExerciseSlug(ex);
+          return (
+            <ExerciseCardSDUI
+              key={`${ex.order}-${slug}`}
+              exercise={ex}
+              weekNumber={weekNumber}
+              dayNumber={dayNumber}
+              isCompleted={completedSlugs.has(slug)}
+            />
+          );
+        })}
       </div>
     </section>
   );

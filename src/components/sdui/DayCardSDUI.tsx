@@ -14,6 +14,11 @@ export function DayCardSDUI({ workout, isCompleted, isCurrent }: DayCardSDUIProp
     ? workout.exercises.length
     : 0;
 
+  const dayTitle =
+    workout.day_name || workout.title || `Día ${workout.day_number}`;
+  const daySubtitle =
+    workout.focus || workout.description || workout.warmup_instructions || null;
+
   // Extract unique categories in this session
   const categories = Array.from(
     new Set(
@@ -40,6 +45,11 @@ export function DayCardSDUI({ workout, isCompleted, isCurrent }: DayCardSDUIProp
           <span className="inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-[0.2em] bg-[#A08A56] text-black tabular-nums">
             DÍA {workout.day_number}
           </span>
+          {workout.is_rest_day && (
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest border border-[#A08A56]/60 text-[#A08A56]">
+              DESCANSO
+            </span>
+          )}
           {isCompleted && (
             <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-emerald-400">
               <CheckCircle2 className="h-3.5 w-3.5" />
@@ -54,12 +64,12 @@ export function DayCardSDUI({ workout, isCompleted, isCurrent }: DayCardSDUIProp
         </div>
 
         <h3 className="text-lg font-black uppercase tracking-tight text-white">
-          {workout.title}
+          {dayTitle}
         </h3>
 
-        {workout.description && (
+        {daySubtitle && (
           <p className="text-xs text-zinc-400 line-clamp-2 max-w-xl">
-            {workout.description}
+            {daySubtitle}
           </p>
         )}
 

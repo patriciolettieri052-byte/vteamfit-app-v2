@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Play, CheckCircle2, Dumbbell } from "lucide-react";
-import type { WorkoutExerciseItem } from "@/types/sdui";
+import { getExerciseSlug, type WorkoutExerciseItem } from "@/types/sdui";
 
 interface ExerciseCardSDUIProps {
   exercise: WorkoutExerciseItem;
@@ -16,10 +16,18 @@ export function ExerciseCardSDUI({
   dayNumber,
   isCompleted = false,
 }: ExerciseCardSDUIProps) {
+  const slug = getExerciseSlug(exercise);
+  const displayName =
+    exercise.name ||
+    exercise.name_override ||
+    slug.replace(/_/g, " ").replace(/-/g, " ");
+  const setsValue = exercise.series ?? exercise.sets ?? "3";
+  const repsValue = exercise.reps ?? "10";
+
   return (
     <Link
       href={`/dashboard/semana/${weekNumber}/dia/${dayNumber}/ejercicio/${encodeURIComponent(
-        exercise.exercise_slug
+        slug
       )}`}
       data-state={isCompleted ? "completed" : "idle"}
       className={`group flex items-center justify-between gap-4 rounded-xl p-4 bg-black/80 backdrop-blur-md border transition-all duration-200 min-h-[72px] ${
@@ -55,7 +63,7 @@ export function ExerciseCardSDUI({
             )}
           </div>
           <h4 className="text-sm sm:text-base font-black uppercase tracking-tight text-white truncate">
-            {exercise.name_override || exercise.exercise_slug.replace(/_/g, " ")}
+            {displayName}
           </h4>
           {exercise.notes && (
             <p className="text-xs text-zinc-400 truncate mt-0.5">{exercise.notes}</p>
@@ -70,34 +78,21 @@ export function ExerciseCardSDUI({
             <span className="block text-[9px] font-bold uppercase tracking-widest text-zinc-500">
               SERIES
             </span>
-            <span className="text-xs font-black text-white">{exercise.sets || "-"}</span>
+            <span className="text-xs font-black text-white">{setsValue}</span>
           </div>
           <div className="rounded bg-zinc-900/90 border border-white/10 px-2.5 py-1 text-center">
             <span className="block text-[9px] font-bold uppercase tracking-widest text-zinc-500">
               REPS
             </span>
-            <span className="text-xs font-black text-white">{exercise.reps || "-"}</span>
+            <span className="text-xs font-black text-white">{repsValue}</span>
           </div>
-          {exercise.rest && (
-            <div className="rounded bg-zinc-900/90 border border-white/10 px-2.5 py-1 text-center">
-              <span className="block text-[9px] font-bold uppercase tracking-widest text-zinc-500">
-                DESC
-              </span>
-              <span className="text-xs font-black text-[#A08A56]">{exercise.rest}</span>
-            </div>
-          )}
         </div>
 
         {/* Compact mobile prescription */}
         <div className="flex sm:hidden flex-col items-end text-right">
           <span className="text-xs font-black text-white">
-            {exercise.sets} × {exercise.reps}
+            {setsValue} × {repsValue}
           </span>
-          {exercise.rest && (
-            <span className="text-[10px] font-bold text-[#A08A56]">
-              Desc: {exercise.rest}
-            </span>
-          )}
         </div>
 
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-900 border border-white/10 text-zinc-300 group-hover:border-[#A08A56] group-hover:text-[#A08A56] transition-colors">

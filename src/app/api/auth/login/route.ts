@@ -48,8 +48,7 @@ export async function POST(req: NextRequest) {
             email,
             full_name:
               signInData.user.user_metadata?.full_name || email.split("@")[0],
-            role: "user",
-            onboarding_completed: false,
+            role: "student",
           },
           { onConflict: "id" }
         )
@@ -63,14 +62,15 @@ export async function POST(req: NextRequest) {
       .from("user_enrollments")
       .select("*, plan:plans(*)")
       .eq("user_id", userId)
-      .eq("status", "active");
+      .eq("status", "active")
+      .order("created_at", { ascending: false });
 
     return NextResponse.json({
       user: {
         userId: profile.id,
         email: profile.email,
         fullName: profile.full_name || "",
-        role: profile.role || "user",
+        role: profile.role || "student",
       },
       profile,
       activeEnrollments: enrollments || [],

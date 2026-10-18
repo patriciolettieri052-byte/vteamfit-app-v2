@@ -115,7 +115,6 @@ export default function DashboardPage() {
   // Determine current week
   let currentWeek = activeEnrollment?.current_week || 1;
   if (weekNumbers.length > 0 && !weekNumbers.includes(currentWeek)) {
-    // Pick first week that isn't 100% completed, or fallback to first week
     const firstIncomplete = weekNumbers.find((wk) => {
       const days = weeksMap.get(wk) || [];
       return days.some((d) => !completedWorkoutIds.has(d.id));
@@ -125,6 +124,11 @@ export default function DashboardPage() {
 
   const greetingReady =
     profile?.gender === "Hombre" ? "Listo para entrenar" : "Lista para entrenar";
+
+  const isEntrenaConmigo =
+    activePlan?.id === "entrena_conmigo" ||
+    activePlan?.slug === "entrena-conmigo" ||
+    activePlan?.slug === "entrena_conmigo";
 
   return (
     <div className="min-h-screen pb-24 flex flex-col">
@@ -190,7 +194,7 @@ export default function DashboardPage() {
                 )}
               </div>
 
-              {activePlan.slug === "entrena_conmigo" && (
+              {isEntrenaConmigo && (
                 <Link
                   href={
                     activeEnrollment?.onboarding_data
@@ -249,7 +253,7 @@ export default function DashboardPage() {
               <p className="text-sm font-bold text-zinc-300">
                 No hay semanas disponibles aún.
               </p>
-              {activePlan?.slug === "entrena_conmigo" && (
+              {isEntrenaConmigo && (
                 <div>
                   <Link
                     href={

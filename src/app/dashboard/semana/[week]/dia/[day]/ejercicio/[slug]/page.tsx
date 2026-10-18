@@ -6,10 +6,11 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Play, Pause, RotateCcw, Check } from "lucide-react";
 import { useVTeamStore } from "@/lib/store";
 import { resolveMediaUrl } from "@/lib/supabase";
-import type {
-  PlanWorkoutRow,
-  WorkoutExerciseItem,
-  ExerciseCatalogRow,
+import {
+  getExerciseSlug,
+  type PlanWorkoutRow,
+  type WorkoutExerciseItem,
+  type ExerciseCatalogRow,
 } from "@/types/sdui";
 import { TopBar } from "@/components/navigation/TopBar";
 
@@ -43,8 +44,8 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
   const [timerRunning, setTimerRunning] = useState(false);
 
   // Telemetry Form state
-  const [seriesInput, setSeriesInput] = useState("");
-  const [repsInput, setRepsInput] = useState("");
+  const [seriesInput, setSeriesInput] = useState("3");
+  const [repsInput, setRepsInput] = useState("10");
   const [weightInput, setWeightInput] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -90,14 +91,18 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
           setWorkout(foundWorkout);
 
           const item = foundWorkout?.exercises?.find(
-            (e) => e.exercise_slug === decodedSlug
+            (e) => getExerciseSlug(e) === decodedSlug
           );
           if (item) {
-            // Pre-populate series & reps with numeric part if not already logged
-            const numericSets = parseInt(item.sets, 10);
-            const numericReps = parseInt(item.reps, 10);
-            if (!isNaN(numericSets)) setSeriesInput(String(numericSets));
-            if (!isNaN(numericReps)) setRepsInput(String(numericReps));
+            const rawSets = item.series ?? item.sets;
+            const numericSets = rawSets ? parseInt(String(rawSets), 10) : 3;
+            const numericReps = item.reps ? parseInt(String(item.reps), 10) : 10;
+            if (!isNaN(numericSets) && numericSets > 0) {
+              setSeriesInput(String(numericSets));
+            }
+            if (!isNaN(numericReps) && numericReps > 0) {
+              setRepsInput(String(numericReps));
+            }
           }
         }
 
@@ -123,7 +128,7 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
     );
     if (existingEx && existingEx.sets && existingEx.sets.length > 0) {
       setSeriesInput(String(existingEx.sets.length));
-      setRepsInput(String(existingEx.sets[0].reps_completed || ""));
+      setRepsInput(String(existingEx.sets[0].reps_completed || "10"));
       setWeightInput(
         existingEx.sets[0].weight_kg ? String(existingEx.sets[0].weight_kg) : ""
       );
@@ -131,14 +136,19 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
   }, [workout, workoutLogs, decodedSlug]);
 
   const prescription: WorkoutExerciseItem | undefined =
-    workout?.exercises?.find((e) => e.exercise_slug === decodedSlug);
+    workout?.exercises?.find((e) => getExerciseSlug(e) === decodedSlug);
 
   const displayName =
+    prescription?.name ||
     prescription?.name_override ||
     catalogExercise?.name ||
     decodedSlug.replace(/_/g, " ").toUpperCase();
 
-  const videoUrl = resolveMediaUrl(catalogExercise?.video_url);
+  const videoUrl = resolveMediaUrl(
+    catalogExercise?.video_path ||
+      catalogExercise?.video_url ||
+      prescription?.video_path
+  );
 
   const formatTime = (totalSec: number) => {
     const mins = Math.floor(totalSec / 60);
@@ -178,7 +188,10 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: session.userId,
+          planId: workout.plan_id,
           workoutId: workout.id,
+          weekNumber,
+          dayName: workout.day_name || `DÍA ${dayNumber}`,
           enrollmentId: activeEnrollment?.id || null,
           action: "save_exercise",
           exerciseLog: {
@@ -319,7 +332,7 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
             <div className="grid grid-cols-3 gap-2 text-center my-auto">
               <div className="rounded-xl bg-zinc-900/90 border border-white/10 p-3">
                 <span className="block text-xl font-black text-white">
-                  {prescription?.sets || "3"}
+                  {prescription?.series ?? prescription?.sets ?? "3"}
                 </span>
                 <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-400">
                   SERIES
@@ -327,7 +340,7 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
               </div>
               <div className="rounded-xl bg-zinc-900/90 border border-white/10 p-3">
                 <span className="block text-xl font-black text-white">
-                  {prescription?.reps || "10"}
+                  {prescription?.reps ?? "10"}
                 </span>
                 <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-400">
                   REPS
@@ -335,7 +348,7 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
               </div>
               <div className="rounded-xl bg-zinc-900/90 border border-white/10 p-3">
                 <span className="block text-xl font-black text-[#A08A56]">
-                  {prescription?.rest || "60s"}
+                  {prescription?.rest ?? "60s"}
                 </span>
                 <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-400">
                   DESC

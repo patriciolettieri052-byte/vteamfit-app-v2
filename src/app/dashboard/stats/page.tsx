@@ -209,7 +209,8 @@ export default function StatsPage() {
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {chronologicalWeights.map((item) => {
-                const dateFormatted = new Date(item.logged_at).toLocaleDateString(
+                const rawDate = item.recorded_date || item.created_at || new Date().toISOString();
+                const dateFormatted = new Date(rawDate).toLocaleDateString(
                   "es-ES",
                   { day: "2-digit", month: "short" }
                 );

@@ -33,9 +33,15 @@ export default function EntrenaConmigoOnboardingPage() {
           const entrenaEnrollment = (data.enrollments || []).find(
             (e: {
               status: string;
-              plan?: { slug?: string };
+              plan_id?: string;
+              plan?: { slug?: string; id?: string };
               onboarding_data?: Record<string, unknown> | null;
-            }) => e.status === "active" && e.plan?.slug === "entrena_conmigo"
+            }) =>
+              e.status === "active" &&
+              (e.plan_id === "entrena_conmigo" ||
+                e.plan?.id === "entrena_conmigo" ||
+                e.plan?.slug === "entrena-conmigo" ||
+                e.plan?.slug === "entrena_conmigo")
           );
 
           // If onboarding_data already exists in v2.user_enrollments, skip straight to /espera

@@ -24,29 +24,20 @@ export async function POST(req: NextRequest) {
 
     if (error || !coupon) {
       return NextResponse.json(
-        { valid: false, error: "Cupón inválido o inexistente." },
+        { valid: false, error: "Código inválido o expirado" },
         { status: 404 }
       );
     }
 
-    if (coupon.expires_at && new Date(coupon.expires_at) < new Date()) {
-      return NextResponse.json(
-        { valid: false, error: "Este cupón ha expirado." },
-        { status: 400 }
-      );
-    }
-
-    if (
-      coupon.applicable_plans &&
-      Array.isArray(coupon.applicable_plans) &&
-      coupon.applicable_plans.length > 0 &&
-      planSlug &&
-      !coupon.applicable_plans.includes(planSlug)
-    ) {
-      return NextResponse.json(
-        { valid: false, error: "Este cupón no aplica para el plan seleccionado." },
-        { status: 400 }
-      );
+    // If coupon.plan_id is set, verify it matches the target plan (comparing normalized hyphen/underscore)
+    if (coupon.plan_id && planSlug) {
+      const norm = (s: string) => s.toLowerCase().replace(/_/g, "-");
+      if (norm(coupon.plan_id) !== norm(planSlug)) {
+        return NextResponse.json(
+          { valid: false, error: "Este cupón no aplica para el plan seleccionado." },
+          { status: 400 }
+        );
+      }
     }
 
     return NextResponse.json({
@@ -57,7 +48,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("Error validating coupon:", err);
     return NextResponse.json(
-      { valid: false, error: "Error interno al validar cupón." },
+      { valid: false, error: "Error al validar el código" },
       { status: 500 }
     );
   }

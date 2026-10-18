@@ -7,7 +7,10 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const {
       userId,
+      planId,
       workoutId,
+      weekNumber,
+      dayName,
       enrollmentId,
       action, // 'save_exercise' | 'complete_day'
       exerciseLog, // ExerciseLogEntry when action === 'save_exercise'
@@ -15,7 +18,6 @@ export async function POST(req: NextRequest) {
       rpeRating,
       notes,
       nextWeek,
-      nextDay,
     } = body;
 
     if (!userId || !workoutId) {
@@ -64,13 +66,15 @@ export async function POST(req: NextRequest) {
         if (error) throw error;
         return NextResponse.json({ workoutLog: updated });
       } else {
-        // Progressive save: completed_at remains NULL until 'complete_day'
+        // Progressive save in v2.user_workout_logs: completed_at remains NULL until 'complete_day'
         const { data: inserted, error } = await supabase
           .from("user_workout_logs")
           .insert({
             user_id: userId,
+            plan_id: planId || "plan_padel",
             workout_id: workoutId,
-            enrollment_id: enrollmentId || null,
+            week_number: weekNumber ? Number(weekNumber) : 1,
+            day_name: dayName || "DÍA",
             completed_at: null,
             exercise_logs: mergedLogs,
           })
@@ -92,7 +96,7 @@ export async function POST(req: NextRequest) {
           .update({
             completed_at: nowIso,
             duration_seconds: durationSeconds ?? existing.duration_seconds ?? 2700,
-            rpe_rating: rpeRating ?? existing.rpe_rating ?? 8,
+            perceived_effort: rpeRating ?? existing.perceived_effort ?? 8,
             notes: notes ?? existing.notes ?? null,
           })
           .eq("id", existing.id)
@@ -106,11 +110,13 @@ export async function POST(req: NextRequest) {
           .from("user_workout_logs")
           .insert({
             user_id: userId,
+            plan_id: planId || "plan_padel",
             workout_id: workoutId,
-            enrollment_id: enrollmentId || null,
+            week_number: weekNumber ? Number(weekNumber) : 1,
+            day_name: dayName || "DÍA",
             completed_at: nowIso,
             duration_seconds: durationSeconds ?? 2700,
-            rpe_rating: rpeRating ?? 8,
+            perceived_effort: rpeRating ?? 8,
             notes: notes ?? null,
             exercise_logs: [],
           })
@@ -121,14 +127,14 @@ export async function POST(req: NextRequest) {
         finalLog = inserted;
       }
 
-      // Advance enrollment current_week / current_day if provided
-      if (enrollmentId && (nextWeek || nextDay)) {
-        const enrollmentUpdates: Record<string, unknown> = {};
-        if (nextWeek) enrollmentUpdates.current_week = Number(nextWeek);
-        if (nextDay) enrollmentUpdates.current_day = Number(nextDay);
+      // Advance enrollment current_week if provided
+      if (enrollmentId && nextWeek) {
         await supabase
           .from("user_enrollments")
-          .update(enrollmentUpdates)
+          .update({
+            current_week: Number(nextWeek),
+            updated_at: new Date().toISOString(),
+          })
           .eq("id", enrollmentId);
       }
 

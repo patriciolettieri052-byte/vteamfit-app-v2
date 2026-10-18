@@ -21,7 +21,9 @@ export async function POST(req: NextRequest) {
     const { data: plan, error: planError } = await supabase
       .from("plans")
       .select("*")
-      .or(`slug.eq.${planSlug},slug.eq.${normalizedSlug},slug.eq.${underscoreSlug},id.eq.${planSlug},id.eq.${underscoreSlug}`)
+      .or(
+        `slug.eq.${planSlug},slug.eq.${normalizedSlug},slug.eq.${underscoreSlug},id.eq.${planSlug},id.eq.${underscoreSlug}`
+      )
       .maybeSingle();
 
     if (planError || !plan) {
@@ -46,19 +48,23 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Upsert active enrollment in v2.user_enrollments
-    const { data: existing } = await supabase
+    // Upsert active enrollment in v2.user_enrollments using exact schema columns
+    const { data: existingList } = await supabase
       .from("user_enrollments")
       .select("*")
       .eq("user_id", userId)
-      .eq("plan_id", plan.id)
-      .maybeSingle();
+      .eq("plan_id", plan.id);
+
+    const existing = existingList?.[0] || null;
 
     let enrollment;
     if (existing) {
       const { data: updated, error: updErr } = await supabase
         .from("user_enrollments")
-        .update({ status: "active" })
+        .update({
+          status: "active",
+          updated_at: new Date().toISOString(),
+        })
         .eq("id", existing.id)
         .select("*, plan:plans(*)")
         .single();
@@ -70,9 +76,9 @@ export async function POST(req: NextRequest) {
         .insert({
           user_id: userId,
           plan_id: plan.id,
-          status: "active",
+          start_date: new Date().toISOString().slice(0, 10),
           current_week: 1,
-          current_day: 1,
+          status: "active",
           onboarding_data: null,
         })
         .select("*, plan:plans(*)")
@@ -87,7 +93,7 @@ export async function POST(req: NextRequest) {
       "/dashboard";
 
     return NextResponse.json({
-      enrollment,
+      enrollment: { ...enrollment, plan },
       plan,
       discountPercent,
       redirectTo: postCheckoutRoute,
@@ -104,7 +110,7 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json();
-    const { userId, planSlug, onboardingData, currentWeek, currentDay } = body;
+    const { userId, planSlug, onboardingData, currentWeek } = body;
 
     if (!userId) {
       return NextResponse.json({ error: "userId is required" }, { status: 400 });
@@ -114,10 +120,14 @@ export async function PATCH(req: NextRequest) {
 
     let planId: string | undefined;
     if (planSlug) {
+      const normalizedSlug = planSlug.replace(/_/g, "-");
+      const underscoreSlug = planSlug.replace(/-/g, "_");
       const { data: plan } = await supabase
         .from("plans")
         .select("id")
-        .eq("slug", planSlug)
+        .or(
+          `slug.eq.${planSlug},slug.eq.${normalizedSlug},slug.eq.${underscoreSlug},id.eq.${planSlug},id.eq.${underscoreSlug}`
+        )
         .maybeSingle();
       planId = plan?.id;
     }
@@ -142,10 +152,11 @@ export async function PATCH(req: NextRequest) {
       );
     }
 
-    const updates: Record<string, unknown> = {};
+    const updates: Record<string, unknown> = {
+      updated_at: new Date().toISOString(),
+    };
     if (onboardingData !== undefined) updates.onboarding_data = onboardingData;
     if (currentWeek !== undefined) updates.current_week = Number(currentWeek);
-    if (currentDay !== undefined) updates.current_day = Number(currentDay);
 
     const { data: updated, error } = await supabase
       .from("user_enrollments")

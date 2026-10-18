@@ -33,6 +33,9 @@ export interface PlanUIConfig {
   system?: string;
   includes?: string[];
   duration_badge?: string;
+  instructor?: string;
+  image_position?: string;
+  is_personalized?: boolean;
   requires_custom_onboarding?: boolean;
   post_checkout_route?: string;
   whatsapp_phone?: string;
@@ -66,20 +69,45 @@ export interface CouponRow {
   id: string;
   code: string;
   discount_percent: number;
-  applicable_plans: string[] | null;
   is_active: boolean;
-  expires_at: string | null;
+  plan_id: string | null;
+  created_at?: string;
 }
 
 export interface WorkoutExerciseItem {
   order: number;
   category: string;
-  name_override: string;
-  exercise_slug: string;
-  sets: string;
-  reps: string;
-  rest: string;
-  notes?: string;
+  name?: string;
+  name_override?: string;
+  exercise_slug?: string;
+  video_code?: string;
+  video_path?: string;
+  series?: string | number | null;
+  sets?: string | number | null;
+  reps?: string | number | null;
+  rpe?: string | number | null;
+  rest?: string | null;
+  notes?: string | null;
+}
+
+/**
+ * Deterministic slug resolver for any exercise inside v2.plan_workouts.exercises
+ * Matches v2.exercises.id when video_path is present.
+ */
+export function getExerciseSlug(ex: WorkoutExerciseItem): string {
+  if (ex.exercise_slug) return ex.exercise_slug;
+  if (ex.video_path) {
+    const cleaned = ex.video_path.replace(/^\//, "").replace(/\.mp4$/i, "").trim();
+    if (cleaned) return cleaned;
+  }
+  const rawName = ex.name || ex.name_override || "ejercicio";
+  const slugified = rawName
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  return `${slugified}-o${ex.order || 1}`;
 }
 
 export interface PlanWorkoutRow {
@@ -87,24 +115,33 @@ export interface PlanWorkoutRow {
   plan_id: string;
   week_number: number;
   day_number: number;
-  title: string;
-  subtitle: string | null;
-  description: string | null;
-  estimated_duration_min: number | null;
+  day_name?: string;
+  focus?: string | null;
+  warmup_instructions?: string | null;
+  is_rest_day?: boolean;
+  title?: string;
+  subtitle?: string | null;
+  description?: string | null;
+  estimated_duration_min?: number | null;
   exercises: WorkoutExerciseItem[];
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface ExerciseCatalogRow {
   id: string;
-  slug: string;
+  slug?: string;
   name: string;
   category: string | null;
-  muscle_group: string | null;
-  equipment: string | null;
-  video_url: string | null;
-  thumbnail_url: string | null;
-  instructions: string[] | null;
-  tips: string[] | null;
+  video_code?: string | null;
+  video_path?: string | null;
+  video_url?: string | null;
+  thumbnail_url?: string | null;
+  original_physical_file?: string | null;
+  other_acceptable_codes?: string | null;
+  is_home_friendly?: boolean;
+  instructions: string | string[] | null;
+  tips?: string[] | null;
 }
 
 export interface UserProfileRow {
@@ -112,12 +149,14 @@ export interface UserProfileRow {
   email: string;
   full_name: string | null;
   avatar_url: string | null;
-  role: "user" | "coach" | "admin";
-  gender: "Hombre" | "Mujer" | "Otro" | null;
+  role: "student" | "user" | "coach" | "admin";
+  phone?: string | null;
+  gender: "Hombre" | "Mujer" | "Otro" | string | null;
   age: number | null;
   weight_kg: number | null;
   height_cm: number | null;
-  onboarding_completed: boolean;
+  birthdate?: string | null;
+  experience_level?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -135,12 +174,13 @@ export interface UserEnrollmentRow {
   id: string;
   user_id: string;
   plan_id: string;
+  start_date?: string;
   status: "active" | "completed" | "paused" | "cancelled";
   current_week: number;
-  current_day: number;
+  current_day?: number;
   onboarding_data: EntrenaConmigoOnboardingData | null;
-  started_at?: string;
-  completed_at?: string | null;
+  created_at?: string;
+  updated_at?: string;
   plan?: PlanRow;
 }
 
@@ -161,11 +201,13 @@ export interface ExerciseLogEntry {
 export interface UserWorkoutLogRow {
   id: string;
   user_id: string;
+  plan_id?: string;
   workout_id: string;
-  enrollment_id: string | null;
+  week_number?: number;
+  day_name?: string;
   completed_at: string | null;
   duration_seconds: number | null;
-  rpe_rating: number | null;
+  perceived_effort?: number | null;
   notes: string | null;
   exercise_logs: ExerciseLogEntry[];
 }
@@ -173,7 +215,7 @@ export interface UserWorkoutLogRow {
 export interface UserWeightLogRow {
   id: string;
   user_id: string;
+  recorded_date: string;
   weight_kg: number;
-  logged_at: string;
-  notes: string | null;
+  created_at?: string;
 }
