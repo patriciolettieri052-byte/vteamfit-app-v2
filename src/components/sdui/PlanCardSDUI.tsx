@@ -46,7 +46,7 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
             <img
               src={plan.cover_image_url}
               alt={planTitle}
-              className="h-full w-full object-cover object-center grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+              className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
             />
           ) : (
             <div className="h-full w-full bg-zinc-900" />

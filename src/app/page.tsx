@@ -37,7 +37,7 @@ export default async function HomePage() {
           <img
             src="/images/fotos/inicio.webp"
             alt="Victoria Torres — VTeamFit"
-            className="h-full w-full object-cover object-[50%_35%] grayscale contrast-125 opacity-60"
+            className="h-full w-full object-cover object-[50%_35%] opacity-65"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-black/55 to-black/75" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80" />
@@ -109,11 +109,11 @@ export default async function HomePage() {
       >
         <div className="mx-auto max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-center rounded-3xl bg-black/80 border border-white/10 p-6 sm:p-10 lg:p-12 backdrop-blur-md">
-            <div className="md:col-span-5 overflow-hidden rounded-2xl border border-white/10 bg-zinc-950">
+            <div className="group md:col-span-5 overflow-hidden rounded-2xl border border-white/10 bg-zinc-950">
               <img
                 src="/images/fotos/vicky-torres2.webp"
                 alt="Vicky Torres"
-                className="h-80 sm:h-96 w-full object-cover object-[30%_center] grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
+                className="h-80 sm:h-96 w-full object-cover object-[30%_center] group-hover:scale-105 transition-transform duration-500 ease-out"
               />
             </div>
 

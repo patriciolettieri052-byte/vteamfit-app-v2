@@ -26,11 +26,11 @@ export default async function EntrenaConmigoEsperaPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg rounded-2xl bg-black/85 border border-[#A08A56] p-8 sm:p-10 backdrop-blur-md shadow-[0_0_25px_-5px_rgba(160,138,86,0.25)] text-center space-y-6">
         {/* Vicky Avatar */}
-        <div className="mx-auto h-28 w-28 overflow-hidden rounded-full border-4 border-[#A08A56]/40 shadow-xl">
+        <div className="group mx-auto h-28 w-28 overflow-hidden rounded-full border-4 border-[#A08A56]/40 shadow-xl">
           <img
             src="/images/fotos/vicky-personalizado.jpg"
             alt="Vicky Torres"
-            className="h-full w-full object-cover object-top grayscale contrast-125"
+            className="h-full w-full object-cover object-top group-hover:scale-110 transition-transform duration-500 ease-out"
           />
         </div>
 
