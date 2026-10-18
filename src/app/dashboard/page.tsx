@@ -303,57 +303,75 @@ export default function DashboardPage() {
                 </div>
               )}
 
-              {/* Grid of All Weeks */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-                {weekNumbers.map((wk) => {
-                  const days = weeksMap.get(wk) || [];
-                  const completedDays = days.filter((d) =>
-                    completedWorkoutIds.has(d.id)
-                  ).length;
-                  const allCompleted =
-                    days.length > 0 && completedDays === days.length;
-                  const isCurrent = wk === currentWeek;
+              {/* Grid of Other Weeks (excluding current active week to avoid duplicate) */}
+              {(() => {
+                const showHighlight = weeksMap.has(currentWeek);
+                const remainingWeeks = showHighlight
+                  ? weekNumbers.filter((wk) => wk !== currentWeek)
+                  : weekNumbers;
 
-                  return (
-                    <Link
-                      key={wk}
-                      href={`/dashboard/semana/${wk}`}
-                      data-state={
-                        allCompleted
-                          ? "completed"
-                          : isCurrent
-                          ? "active"
-                          : "idle"
-                      }
-                      className={`group flex items-center justify-between rounded-xl p-4 bg-black/80 border transition-all ${
-                        allCompleted
-                          ? "border-emerald-500/45 bg-emerald-950/10"
-                          : isCurrent
-                          ? "border-[#A08A56]"
-                          : "border-white/10 hover:border-white/25"
-                      }`}
-                    >
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="text-base font-black uppercase text-white">
-                            Semana {wk}
-                          </h4>
-                          {allCompleted && (
-                            <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-emerald-400">
-                              <CheckCircle2 className="h-3 w-3" />✓ COMPLETADA
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-xs font-bold text-zinc-400 tabular-nums mt-0.5">
-                          {completedDays}/{days.length} Días
-                        </p>
-                      </div>
+                if (remainingWeeks.length === 0) return null;
 
-                      <ChevronRight className="h-5 w-5 text-zinc-500 group-hover:text-[#A08A56] transition-colors" />
-                    </Link>
-                  );
-                })}
-              </div>
+                return (
+                  <div className="space-y-3 pt-3">
+                    {showHighlight && (
+                      <span className="text-[10px] font-black uppercase tracking-[0.22em] text-zinc-400 block">
+                        OTRAS SEMANAS
+                      </span>
+                    )}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                      {remainingWeeks.map((wk) => {
+                        const days = weeksMap.get(wk) || [];
+                        const completedDays = days.filter((d) =>
+                          completedWorkoutIds.has(d.id)
+                        ).length;
+                        const allCompleted =
+                          days.length > 0 && completedDays === days.length;
+                        const isCurrent = wk === currentWeek;
+
+                        return (
+                          <Link
+                            key={wk}
+                            href={`/dashboard/semana/${wk}`}
+                            data-state={
+                              allCompleted
+                                ? "completed"
+                                : isCurrent
+                                ? "active"
+                                : "idle"
+                            }
+                            className={`group flex items-center justify-between rounded-xl p-4 bg-black/80 border transition-all ${
+                              allCompleted
+                                ? "border-emerald-500/45 bg-emerald-950/10"
+                                : isCurrent
+                                ? "border-[#A08A56]"
+                                : "border-white/10 hover:border-white/25"
+                            }`}
+                          >
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h4 className="text-base font-black italic uppercase text-white">
+                                  Semana {wk}
+                                </h4>
+                                {allCompleted && (
+                                  <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-emerald-400">
+                                    <CheckCircle2 className="h-3 w-3" />✓ COMPLETADA
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs font-bold text-zinc-400 tabular-nums mt-0.5">
+                                {completedDays}/{days.length} Días
+                              </p>
+                            </div>
+
+                            <ChevronRight className="h-5 w-5 text-zinc-500 group-hover:text-[#A08A56] transition-colors" />
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
         </section>
