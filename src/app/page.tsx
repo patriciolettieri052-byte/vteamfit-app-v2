@@ -50,7 +50,7 @@ export default async function HomePage() {
           </p>
 
           <h1
-            className="font-black uppercase tracking-tight text-white leading-[0.95] mb-6"
+            className="font-black italic uppercase tracking-tight text-white leading-[0.95] mb-6"
             style={{ fontSize: "var(--text-display-hero)" }}
           >
             TU MEJOR VERSIÓN
@@ -85,7 +85,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl">
           <div className="text-center mb-14">
             <h2
-              className="font-black uppercase tracking-tight text-white mb-4"
+              className="font-black italic uppercase tracking-tight text-white mb-4"
               style={{ fontSize: "var(--text-heading-1)" }}
             >
               ELIGE TU PLAN
@@ -123,7 +123,7 @@ export default async function HomePage() {
                   HEAD COACH & FOUNDER
                 </span>
                 <h2
-                  className="font-black uppercase tracking-tight text-white"
+                  className="font-black italic uppercase tracking-tight text-white"
                   style={{ fontSize: "var(--text-heading-1)" }}
                 >
                   Vicky Torres

@@ -71,7 +71,7 @@ function RegisterForm() {
           />
         </Link>
         <h1
-          className="font-black uppercase tracking-tight text-white"
+          className="font-black italic uppercase tracking-tight text-white"
           style={{ fontSize: "var(--text-heading-1)" }}
         >
           CREAR CUENTA

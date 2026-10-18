@@ -112,7 +112,7 @@ export default function StatsPage() {
       <main className="flex-1 mx-auto w-full max-w-4xl px-4 sm:px-6 py-8 space-y-8">
         <header className="space-y-2 border-b border-white/10 pb-5">
           <h1
-            className="font-black uppercase tracking-tight text-white"
+            className="font-black italic uppercase tracking-tight text-white"
             style={{ fontSize: "var(--text-heading-1)" }}
           >
             TUS NÚMEROS

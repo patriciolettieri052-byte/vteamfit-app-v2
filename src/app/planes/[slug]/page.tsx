@@ -99,7 +99,7 @@ export default async function PlanDetailPage({ params }: PlanDetailPageProps) {
                   </p>
                 )}
                 <h1
-                  className="font-black uppercase tracking-tight text-white leading-none"
+                  className="font-black italic uppercase tracking-tight text-white leading-none"
                   style={{ fontSize: "var(--text-heading-1)" }}
                 >
                   {planTitle}

@@ -86,7 +86,7 @@ export default function ProfilePage() {
             {initial}
           </div>
           <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white truncate">
+            <h1 className="text-xl sm:text-2xl font-black italic uppercase tracking-tight text-white truncate">
               {displayName}
             </h1>
             <p className="text-xs sm:text-sm text-zinc-400 truncate">

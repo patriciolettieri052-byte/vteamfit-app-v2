@@ -87,7 +87,7 @@ function OnboardingWizard() {
         <div className="space-y-6">
           <div className="text-center">
             <h1
-              className="font-black uppercase tracking-tight text-white"
+              className="font-black italic uppercase tracking-tight text-white"
               style={{ fontSize: "var(--text-heading-1)" }}
             >
               HOLA 👋
@@ -145,7 +145,7 @@ function OnboardingWizard() {
         <form onSubmit={handleFinish} className="space-y-6">
           <div className="text-center">
             <h1
-              className="font-black uppercase tracking-tight text-white"
+              className="font-black italic uppercase tracking-tight text-white"
               style={{ fontSize: "var(--text-heading-1)" }}
             >
               TUS MÉTRICAS

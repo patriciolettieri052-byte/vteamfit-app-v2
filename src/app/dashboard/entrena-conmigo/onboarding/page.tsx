@@ -115,11 +115,11 @@ export default function EntrenaConmigoOnboardingPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg rounded-2xl bg-black/85 border border-white/15 p-8 backdrop-blur-md shadow-2xl space-y-6">
         <div className="text-center">
-          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A08A56] block mb-2">
+          <span className="text-[10px] font-black italic uppercase tracking-[0.25em] text-[#A08A56] block mb-2">
             ENTRENA CONMIGO
           </span>
           <h1
-            className="font-black uppercase tracking-tight text-white"
+            className="font-black italic uppercase tracking-tight text-white"
             style={{ fontSize: "var(--text-heading-1)" }}
           >
             CUÉNTANOS SOBRE TI

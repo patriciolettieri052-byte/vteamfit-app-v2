@@ -142,7 +142,7 @@ export default function DashboardPage() {
               {greetingReady}
             </p>
             <h1
-              className="font-black uppercase tracking-tight text-white"
+              className="font-black italic uppercase tracking-tight text-white"
               style={{ fontSize: "var(--text-heading-1)" }}
             >
               Hola, {profile?.full_name || session.fullName || "Atleta"}
@@ -184,7 +184,7 @@ export default function DashboardPage() {
                 <span className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.25em] text-[#A08A56]">
                   ● PLAN ACTIVO
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">
+                <h2 className="text-2xl sm:text-3xl font-black italic uppercase tracking-tight text-white">
                   {activePlan.name || activePlan.title}
                 </h2>
                 {(activePlan.ui_config?.subtitle || activePlan.tagline) && (
@@ -231,7 +231,7 @@ export default function DashboardPage() {
         <section className="space-y-5">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <h2
-              className="font-black uppercase tracking-tight text-white"
+              className="font-black italic uppercase tracking-tight text-white"
               style={{ fontSize: "var(--text-heading-2)" }}
             >
               TU PROGRESO
@@ -280,7 +280,7 @@ export default function DashboardPage() {
                     <span className="text-[10px] font-black uppercase tracking-[0.22em] text-[#A08A56]">
                       SEMANA ACTUAL
                     </span>
-                    <h3 className="text-2xl font-black uppercase tracking-tight text-white">
+                    <h3 className="text-2xl font-black italic uppercase tracking-tight text-white">
                       Semana {currentWeek}
                     </h3>
                     <p className="text-xs font-bold text-zinc-400 tabular-nums">

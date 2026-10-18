@@ -157,7 +157,7 @@ export default function DayRoutinePage({ params }: DayPageProps) {
               Semana {weekNumber} · Día {dayNumber}
             </p>
             <h1
-              className="font-black uppercase tracking-tight text-white"
+              className="font-black italic uppercase tracking-tight text-white"
               style={{ fontSize: "var(--text-heading-1)" }}
             >
               {dayHeaderTitle}

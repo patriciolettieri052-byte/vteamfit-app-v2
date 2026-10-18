@@ -18,7 +18,7 @@ function CelebrationContent() {
 
       <div className="space-y-2">
         <h2
-          className="font-black uppercase tracking-tight text-white"
+          className="font-black italic uppercase tracking-tight text-white"
           style={{ fontSize: "var(--text-heading-1)" }}
         >
           ¡MISIÓN CUMPLIDA!

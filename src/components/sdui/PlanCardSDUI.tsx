@@ -76,7 +76,7 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
                 {planSubtitle}
               </p>
             )}
-            <h3 className="text-2xl font-black uppercase tracking-tight text-white leading-tight">
+            <h3 className="text-2xl font-black italic uppercase tracking-tight text-white leading-tight">
               {planTitle}
             </h3>
           </div>

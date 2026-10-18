@@ -38,7 +38,7 @@ export default function RecoverPasswordPage() {
           <div className="space-y-4">
             <div className="text-4xl">📧</div>
             <h1
-              className="font-black uppercase tracking-tight text-white"
+              className="font-black italic uppercase tracking-tight text-white"
               style={{ fontSize: "var(--text-heading-1)" }}
             >
               REVISÁ TU EMAIL
@@ -58,7 +58,7 @@ export default function RecoverPasswordPage() {
         ) : (
           <>
             <h1
-              className="font-black uppercase tracking-tight text-white"
+              className="font-black italic uppercase tracking-tight text-white"
               style={{ fontSize: "var(--text-heading-2)" }}
             >
               RECUPERAR CONTRASEÑA

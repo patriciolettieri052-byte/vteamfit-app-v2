@@ -63,7 +63,7 @@ export function DayCardSDUI({ workout, isCompleted, isCurrent }: DayCardSDUIProp
           )}
         </div>
 
-        <h3 className="text-lg font-black uppercase tracking-tight text-white">
+        <h3 className="text-lg font-black italic uppercase tracking-tight text-white">
           {dayTitle}
         </h3>
 

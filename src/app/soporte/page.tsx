@@ -20,7 +20,7 @@ export default function SoportePage() {
         </div>
 
         <h1
-          className="font-black uppercase tracking-tight text-white border-b border-white/10 pb-4"
+          className="font-black italic uppercase tracking-tight text-white border-b border-white/10 pb-4"
           style={{ fontSize: "var(--text-heading-1)" }}
         >
           SOPORTE Y AYUDA
