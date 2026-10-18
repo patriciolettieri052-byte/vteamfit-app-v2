@@ -10,9 +10,25 @@ interface PlanCardSDUIProps {
 
 export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
   const ui = plan.ui_config || {};
-  const isFeatured = Boolean(ui.is_featured);
-  const features = Array.isArray(ui.card_features) ? ui.card_features : [];
-  const ctaLabel = ui.cta_label || "EMPEZAR AHORA";
+  const isFeatured = Boolean(ui.is_featured || ui.card_variant === "featured");
+  const features = Array.isArray(ui.features)
+    ? ui.features
+    : Array.isArray(ui.card_features)
+    ? ui.card_features
+    : [];
+  const ctaLabel = ui.cta?.label || ui.cta_label || "EMPEZAR AHORA";
+  const planTitle = plan.name || plan.title || "PLAN";
+  const planSubtitle = ui.subtitle || plan.tagline;
+  const durationLabel =
+    ui.duration_badge ||
+    (plan.total_weeks ? `${plan.total_weeks} SEMANAS` : plan.duration_weeks ? `${plan.duration_weeks} SEMANAS` : null);
+
+  const billingLabel =
+    plan.billing_type === "mensual" || plan.billing_type === "monthly"
+      ? " / MES"
+      : plan.billing_type === "trimestral"
+      ? " / TRIMESTRAL"
+      : " · PAGO ÚNICO";
 
   return (
     <article
@@ -29,7 +45,7 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
           {plan.cover_image_url ? (
             <img
               src={plan.cover_image_url}
-              alt={plan.title}
+              alt={planTitle}
               className="h-full w-full object-cover object-center grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
             />
           ) : (
@@ -45,23 +61,23 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
           )}
 
           {/* Duration / Level Tag */}
-          {plan.duration_weeks && (
+          {durationLabel && (
             <div className="absolute top-4 right-4 z-10">
               <span className="inline-block rounded bg-black/75 backdrop-blur-sm border border-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-zinc-300">
-                {plan.duration_weeks} SEMANAS
+                {durationLabel}
               </span>
             </div>
           )}
 
           {/* Title & Subtitle Overlay at bottom of image */}
           <div className="absolute bottom-3 left-5 right-5 z-10">
-            {ui.subtitle && (
+            {planSubtitle && (
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A08A56] mb-1">
-                {ui.subtitle}
+                {planSubtitle}
               </p>
             )}
             <h3 className="text-2xl font-black uppercase tracking-tight text-white leading-tight">
-              {plan.title}
+              {planTitle}
             </h3>
           </div>
         </div>
@@ -86,7 +102,7 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
             </span>
             <span className="text-xs font-bold uppercase tracking-widest text-zinc-400">
               {plan.currency || "USD"}
-              {plan.billing_type === "monthly" ? " / MES" : " · PAGO ÚNICO"}
+              {billingLabel}
             </span>
           </div>
 

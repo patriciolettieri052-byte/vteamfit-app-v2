@@ -15,12 +15,14 @@ export async function POST(req: NextRequest) {
 
     const supabase = createServerSupabase();
 
-    // Fetch target plan from v2.plans
+    // Fetch target plan from v2.plans supporting both hyphens and underscores
+    const normalizedSlug = planSlug.replace(/_/g, "-");
+    const underscoreSlug = planSlug.replace(/-/g, "_");
     const { data: plan, error: planError } = await supabase
       .from("plans")
       .select("*")
-      .eq("slug", planSlug)
-      .single();
+      .or(`slug.eq.${planSlug},slug.eq.${normalizedSlug},slug.eq.${underscoreSlug},id.eq.${planSlug},id.eq.${underscoreSlug}`)
+      .maybeSingle();
 
     if (planError || !plan) {
       return NextResponse.json(
@@ -80,7 +82,9 @@ export async function POST(req: NextRequest) {
     }
 
     const postCheckoutRoute =
-      plan.ui_config?.post_checkout_route || "/dashboard";
+      plan.ui_config?.cta?.post_checkout_route ||
+      plan.ui_config?.post_checkout_route ||
+      "/dashboard";
 
     return NextResponse.json({
       enrollment,

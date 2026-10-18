@@ -16,13 +16,23 @@ export interface PlanMethodologyStep {
 
 export interface PlanUIConfig {
   subtitle?: string;
+  tagline?: string;
   badge?: PlanBadgeConfig | null;
   is_featured?: boolean;
+  card_variant?: string;
+  cta?: {
+    label?: string;
+    action_type?: string;
+    post_checkout_route?: string;
+  };
   cta_label?: string;
+  features?: string[];
   card_features?: string[];
   detail_tags?: string[];
-  methodology?: PlanMethodologyStep[];
+  methodology?: string | PlanMethodologyStep[];
+  system?: string;
   includes?: string[];
+  duration_badge?: string;
   requires_custom_onboarding?: boolean;
   post_checkout_route?: string;
   whatsapp_phone?: string;
@@ -31,19 +41,25 @@ export interface PlanUIConfig {
 export interface PlanRow {
   id: string;
   slug: string;
-  title: string;
+  name: string;
+  title?: string;
   description: string | null;
-  level: string | null;
-  duration_weeks: number | null;
+  tagline?: string | null;
+  level?: string | null;
+  total_weeks?: number | null;
+  duration_weeks?: number | null;
+  days_per_week?: number | null;
   cover_image_url: string | null;
-  is_active: boolean;
+  is_published?: boolean;
+  is_active?: boolean;
   display_order: number;
   price_amount: number;
   compare_at_price: number | null;
   currency: string;
-  billing_type: "one_time" | "monthly";
+  billing_type: string;
   ui_config: PlanUIConfig;
   created_at?: string;
+  updated_at?: string;
 }
 
 export interface CouponRow {

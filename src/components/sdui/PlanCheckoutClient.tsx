@@ -112,7 +112,10 @@ export function PlanCheckoutClient({ plan }: PlanCheckoutClientProps) {
         ...session,
         activePlanSlug: plan.slug,
       });
-      const targetRoute = plan.ui_config?.post_checkout_route || "/dashboard";
+      const targetRoute =
+        plan.ui_config?.cta?.post_checkout_route ||
+        plan.ui_config?.post_checkout_route ||
+        "/dashboard";
       router.push(targetRoute);
       return;
     }

@@ -159,7 +159,7 @@ export default function DashboardPage() {
                 >
                   {selectablePlans.map((p) => (
                     <option key={p.id} value={p.slug} className="bg-zinc-950 text-white">
-                      {p.title}
+                      {p.name || p.title}
                     </option>
                   ))}
                 </select>
@@ -181,11 +181,11 @@ export default function DashboardPage() {
                   ● PLAN ACTIVO
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">
-                  {activePlan.title}
+                  {activePlan.name || activePlan.title}
                 </h2>
-                {activePlan.ui_config?.subtitle && (
+                {(activePlan.ui_config?.subtitle || activePlan.tagline) && (
                   <p className="text-xs font-bold uppercase tracking-widest text-zinc-400">
-                    {activePlan.ui_config.subtitle}
+                    {activePlan.ui_config?.subtitle || activePlan.tagline}
                   </p>
                 )}
               </div>

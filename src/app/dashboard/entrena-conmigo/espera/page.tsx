@@ -12,7 +12,7 @@ export default async function EntrenaConmigoEsperaPage() {
   const { data: planData } = await supabase
     .from("plans")
     .select("ui_config")
-    .eq("slug", "entrena_conmigo")
+    .or("slug.eq.entrena-conmigo,slug.eq.entrena_conmigo,id.eq.entrena_conmigo")
     .maybeSingle();
 
   const rawPhone =
@@ -25,6 +25,15 @@ export default async function EntrenaConmigoEsperaPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg rounded-2xl bg-black/85 border border-[#A08A56] p-8 sm:p-10 backdrop-blur-md shadow-[0_0_25px_-5px_rgba(160,138,86,0.25)] text-center space-y-6">
+        {/* Vicky Avatar */}
+        <div className="mx-auto h-28 w-28 overflow-hidden rounded-full border-4 border-[#A08A56]/40 shadow-xl">
+          <img
+            src="/images/fotos/vicky-personalizado.jpg"
+            alt="Vicky Torres"
+            className="h-full w-full object-cover object-top grayscale contrast-125"
+          />
+        </div>
+
         <div className="inline-flex items-center gap-2 rounded-full bg-[#A08A56]/15 border border-[#A08A56] px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#A08A56]">
           <span>● EN PREPARACIÓN ●</span>
         </div>

@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
         supabase
           .from("plans")
           .select("*")
-          .eq("is_active", true)
+          .eq("is_published", true)
           .order("display_order", { ascending: true }),
         supabase
           .from("user_workout_logs")

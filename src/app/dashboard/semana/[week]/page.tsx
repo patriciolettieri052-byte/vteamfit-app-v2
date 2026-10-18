@@ -87,7 +87,7 @@ export default function WeekViewPage({ params }: WeekPageProps) {
         <header className="border-b border-white/10 pb-5">
           {activePlan && (
             <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#A08A56] mb-1">
-              {activePlan.title}
+              {activePlan.name || activePlan.title}
             </p>
           )}
           <h1
