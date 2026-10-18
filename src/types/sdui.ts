@@ -82,6 +82,7 @@ export interface WorkoutExerciseItem {
   exercise_slug?: string;
   video_code?: string;
   video_path?: string;
+  thumbnail_url?: string;
   series?: string | number | null;
   sets?: string | number | null;
   reps?: string | number | null;
@@ -108,6 +109,22 @@ export function getExerciseSlug(ex: WorkoutExerciseItem): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
   return `${slugified}-o${ex.order || 1}`;
+}
+
+/**
+ * Deterministic thumbnail resolver for any exercise
+ * Uses thumbnail_url if present, otherwise constructs CDN url from video_path.
+ */
+export function getExerciseThumbnail(
+  ex: WorkoutExerciseItem,
+  cdnBase: string = "https://vteamfit-oct-26.b-cdn.net"
+): string | null {
+  if (ex.thumbnail_url && ex.thumbnail_url.trim()) return ex.thumbnail_url.trim();
+  if (ex.video_path && ex.video_path.trim()) {
+    const cleaned = ex.video_path.replace(/^\//, "").replace(/\.mp4$/i, "").trim();
+    if (cleaned) return `${cdnBase}/thumbnails/${cleaned}.jpg`;
+  }
+  return null;
 }
 
 export interface PlanWorkoutRow {
