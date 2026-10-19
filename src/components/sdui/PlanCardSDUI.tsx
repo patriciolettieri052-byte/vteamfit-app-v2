@@ -45,8 +45,8 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
           ) : (
             <div className="h-full w-full bg-zinc-900" />
           )}
-          {/* Subtle bottom-only gradient strictly to give contrast to title */}
-          <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none" />
+          {/* Enhanced bottom gradient for improved title contrast without over-darkening the photo */}
+          <div className="absolute bottom-0 inset-x-0 h-28 bg-gradient-to-t from-black via-black/55 to-transparent pointer-events-none" />
 
           {/* Badge */}
           {ui.badge && (
@@ -65,7 +65,7 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
           )}
 
           {/* Title & Subtitle Overlay lowered close to bottom */}
-          <div className="absolute bottom-2 left-5 right-5 z-10">
+          <div className="absolute bottom-2.5 left-5 right-5 z-10 drop-shadow-md">
             {planSubtitle && (
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A08A56] mb-0.5">
                 {planSubtitle}
