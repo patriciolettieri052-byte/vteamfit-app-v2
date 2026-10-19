@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Check, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { PlanRow } from "@/types/sdui";
 import { PlanBadgeSDUI } from "./PlanBadgeSDUI";
 
@@ -11,11 +11,6 @@ interface PlanCardSDUIProps {
 export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
   const ui = plan.ui_config || {};
   const isFeatured = Boolean(ui.is_featured || ui.card_variant === "featured");
-  const features = Array.isArray(ui.features)
-    ? ui.features
-    : Array.isArray(ui.card_features)
-    ? ui.card_features
-    : [];
   const ctaLabel = ui.cta?.label || ui.cta_label || "EMPEZAR AHORA";
   const planTitle = plan.name || plan.title || "PLAN";
   const planSubtitle = ui.subtitle || plan.tagline;
@@ -43,7 +38,7 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
     >
       {/* Top Section: Cover Image + Badge */}
       <div>
-        <div className="relative h-56 w-full overflow-hidden bg-zinc-950">
+        <div className="relative h-72 sm:h-80 w-full overflow-hidden bg-zinc-950">
           {plan.cover_image_url ? (
             <img
               src={plan.cover_image_url}
@@ -94,7 +89,7 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
           )}
 
           {/* Price Block */}
-          <div className="mb-6 pb-5 border-b border-white/10 flex items-baseline gap-2.5 tabular-nums">
+          <div className="flex items-baseline gap-2.5 tabular-nums">
             {plan.compare_at_price && Number(plan.compare_at_price) > Number(plan.price_amount) && (
               <span className="text-sm font-bold text-zinc-500 line-through">
                 ${Number(plan.compare_at_price).toFixed(2)}
@@ -108,18 +103,6 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
               {billingLabel}
             </span>
           </div>
-
-          {/* Checklist Features */}
-          {features.length > 0 && (
-            <ul className="space-y-2.5 mb-6">
-              {features.map((feat, idx) => (
-                <li key={idx} className="flex items-start gap-2.5 text-xs text-zinc-300">
-                  <Check className="h-4 w-4 shrink-0 text-[#A08A56] mt-0.5" />
-                  <span>{feat}</span>
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
       </div>
 
