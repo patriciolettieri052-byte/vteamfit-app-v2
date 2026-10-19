@@ -26,13 +26,13 @@ export function TopBar() {
     <header className="sticky top-0 z-50 h-20 w-full bg-black/90 backdrop-blur-md border-b border-white/10">
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-2">
           <img
             src="/images/logo.svg"
             alt="VTeamFit Logo"
-            className="h-9 w-auto object-contain"
+            className="h-[32px] w-auto object-contain"
           />
-          <span className="hidden sm:inline-block text-xs font-black uppercase tracking-[0.25em] text-white">
+          <span className="hidden sm:inline-block text-[10px] font-black uppercase tracking-[0.2em] text-white">
             VTEAM<span className="text-[#A08A56]">FIT</span>
           </span>
         </Link>
@@ -60,30 +60,30 @@ export function TopBar() {
         </nav>
 
         {/* Auth / Session Controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {session ? (
             <>
               <Link
                 href="/dashboard"
-                className="inline-flex items-center gap-2 min-h-[42px] px-4 py-2 rounded-lg bg-[#A08A56] hover:bg-[#B59E68] text-black text-xs font-black uppercase tracking-widest transition-colors"
+                className="inline-flex items-center gap-1.5 min-h-[28px] px-2.5 py-1 rounded-md bg-[#A08A56] hover:bg-[#B59E68] text-black text-[10px] font-black uppercase tracking-wider transition-colors"
               >
-                <LayoutDashboard className="h-4 w-4" />
+                <LayoutDashboard className="h-3 w-3" />
                 <span>MI PANEL</span>
               </Link>
               <button
                 onClick={handleLogout}
                 title="Cerrar sesión"
-                className="inline-flex items-center justify-center h-[42px] w-[42px] rounded-lg bg-[#27272A] hover:bg-[#3F3F46] text-[#D4D4D8] border border-[#3F3F46] transition-colors cursor-pointer"
+                className="inline-flex items-center justify-center h-[28px] w-[28px] rounded-md bg-[#27272A] hover:bg-[#3F3F46] text-[#D4D4D8] border border-[#3F3F46] transition-colors cursor-pointer"
               >
-                <LogOut className="h-4 w-4" />
+                <LogOut className="h-3 w-3" />
               </button>
             </>
           ) : (
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 min-h-[42px] px-4 py-2 rounded-lg bg-[#27272A] hover:bg-[#3F3F46] text-[#D4D4D8] border border-[#3F3F46] text-xs font-bold uppercase tracking-widest transition-colors"
+              className="inline-flex items-center gap-1.5 min-h-[28px] px-2.5 py-1 rounded-md bg-[#27272A] hover:bg-[#3F3F46] text-[#D4D4D8] border border-[#3F3F46] text-[10px] font-bold uppercase tracking-wider transition-colors"
             >
-              <User className="h-4 w-4 text-[#A08A56]" />
+              <User className="h-3 w-3 text-[#A08A56]" />
               <span>ACCESO ALUMNOS</span>
             </Link>
           )}

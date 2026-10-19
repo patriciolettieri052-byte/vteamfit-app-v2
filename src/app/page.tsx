@@ -31,32 +31,32 @@ export default async function HomePage() {
       <TopBar />
 
       {/* 1. HERO PRINCIPAL */}
-      <section className="relative min-h-[82vh] w-full flex items-center justify-center overflow-hidden border-b border-white/10">
+      <section className="relative min-h-[50vh] w-full flex items-center justify-center overflow-hidden border-b border-white/10">
         {/* Background Image + Gradient Vignette */}
         <div className="absolute inset-0 z-0">
           <img
             src="/images/fotos/inicio.webp"
             alt="Victoria Torres — VTeamFit"
-            className="h-full w-full object-cover object-[50%_35%] opacity-65"
+            className="h-full w-full object-cover object-[50%_100%] opacity-85"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-black/55 to-black/75" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/49 via-black/29 to-black/36" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/39 via-transparent to-black/39" />
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-[#A08A56] mb-3">
+        <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12 text-center drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+          <p className="text-[11px] sm:text-[13px] font-bold uppercase tracking-[0.25em] pl-[0.25em] text-[#A08A56] mb-2">
             Planes de entrenamiento para ti
           </p>
 
           <h1
-            className="font-black italic uppercase tracking-tight text-white leading-[0.95] mb-6"
-            style={{ fontSize: "var(--text-display-hero)" }}
+            className="font-black italic uppercase tracking-tight text-white leading-[1.05] mb-3 whitespace-nowrap"
+            style={{ fontSize: "clamp(1.65rem, 1.1rem + 2.2vw, 2.75rem)" }}
           >
             TU MEJOR VERSIÓN
           </h1>
 
-          <p className="mx-auto max-w-2xl text-sm sm:text-base text-zinc-300 leading-relaxed mb-10">
+          <p className="mx-auto max-w-2xl text-[13px] sm:text-[15px] text-zinc-300 leading-relaxed mb-6">
             VTeamFit es una aplicación de fitness creada por Victoria Torres junto a
             Tito Allemandi, bicampeón de pádel mundial con más de 20 años de
             experiencia en el mundo de la competición. Construida desde la constancia y
