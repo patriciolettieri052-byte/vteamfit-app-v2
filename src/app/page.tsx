@@ -63,16 +63,16 @@ export default async function HomePage() {
             conocimiento real.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3">
             <a
               href="#planes"
-              className="min-h-[52px] px-8 py-4 rounded-lg bg-[#A08A56] hover:bg-[#B59E68] text-black text-xs sm:text-sm font-black uppercase tracking-[0.2em] transition-all shadow-[0_0_25px_-5px_rgba(160,138,86,0.4)] flex items-center justify-center"
+              className="min-h-[36px] px-5 py-2 rounded-lg bg-[#A08A56] hover:bg-[#B59E68] text-black text-[11px] sm:text-xs font-black uppercase tracking-[0.15em] transition-all shadow-[0_0_20px_-5px_rgba(160,138,86,0.4)] flex items-center justify-center"
             >
               VER PLANES
             </a>
             <Link
               href="/login"
-              className="min-h-[52px] px-8 py-4 rounded-lg bg-[#27272A] hover:bg-[#3F3F46] text-[#D4D4D8] border border-[#3F3F46] text-xs sm:text-sm font-bold uppercase tracking-[0.2em] transition-all flex items-center justify-center"
+              className="min-h-[36px] px-5 py-2 rounded-lg bg-[#27272A] hover:bg-[#3F3F46] text-[#D4D4D8] border border-[#3F3F46] text-[11px] sm:text-xs font-bold uppercase tracking-[0.15em] transition-all flex items-center justify-center"
             >
               INICIA SESIÓN
             </Link>
