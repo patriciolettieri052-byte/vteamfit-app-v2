@@ -45,7 +45,8 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
           ) : (
             <div className="h-full w-full bg-zinc-900" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
+          {/* Subtle bottom-only gradient strictly to give contrast to title */}
+          <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />
 
           {/* Badge */}
           {ui.badge && (

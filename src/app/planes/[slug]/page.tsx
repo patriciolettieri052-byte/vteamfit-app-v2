@@ -79,7 +79,8 @@ export default async function PlanDetailPage({ params }: PlanDetailPageProps) {
                   className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                 />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
+              {/* Subtle bottom-only gradient strictly to give contrast to title */}
+              <div className="absolute bottom-0 inset-x-0 h-28 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />
 
               {ui.badge && (
                 <div className="absolute top-5 left-5">
