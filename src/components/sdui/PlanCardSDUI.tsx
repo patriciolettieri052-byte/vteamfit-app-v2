@@ -30,6 +30,8 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
       ? " / TRIMESTRAL"
       : " · PAGO ÚNICO";
 
+  const imagePosition = ui.image_position || "center";
+
   return (
     <article
       data-featured={isFeatured ? "true" : "false"}
@@ -46,7 +48,8 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
             <img
               src={plan.cover_image_url}
               alt={planTitle}
-              className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+              style={{ objectPosition: imagePosition }}
+              className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
             />
           ) : (
             <div className="h-full w-full bg-zinc-900" />

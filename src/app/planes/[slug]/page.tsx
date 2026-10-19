@@ -48,6 +48,8 @@ export default async function PlanDetailPage({ params }: PlanDetailPageProps) {
     ui.duration_badge ||
     (plan.total_weeks ? `${plan.total_weeks * 7} DÍAS` : null);
 
+  const imagePosition = ui.image_position || "center";
+
   return (
     <div className="min-h-screen flex flex-col">
       <TopBar />
@@ -73,7 +75,8 @@ export default async function PlanDetailPage({ params }: PlanDetailPageProps) {
                 <img
                   src={plan.cover_image_url}
                   alt={planTitle}
-                  className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+                  style={{ objectPosition: imagePosition }}
+                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                 />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
