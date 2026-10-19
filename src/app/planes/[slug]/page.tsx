@@ -70,7 +70,7 @@ export default async function PlanDetailPage({ params }: PlanDetailPageProps) {
           {/* Left Column: Visual & Details */}
           <div className="lg:col-span-7 space-y-8">
             {/* Hero Cover Card */}
-            <div className="group relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-950 h-72 sm:h-80">
+            <div className="group relative rounded-2xl overflow-hidden border-2 border-[#A08A56] bg-zinc-950 h-72 sm:h-80 shadow-[0_0_25px_-5px_rgba(160,138,86,0.25)]">
               {plan.cover_image_url && (
                 <img
                   src={plan.cover_image_url}

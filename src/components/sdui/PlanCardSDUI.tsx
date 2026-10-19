@@ -30,11 +30,7 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
   return (
     <article
       data-featured={isFeatured ? "true" : "false"}
-      className={`group relative flex flex-col justify-between rounded-2xl bg-black/85 backdrop-blur-md transition-all duration-300 overflow-hidden ${
-        isFeatured
-          ? "border-2 border-[#A08A56] shadow-[0_0_25px_-5px_rgba(160,138,86,0.25)]"
-          : "border border-white/10 hover:border-white/25"
-      }`}
+      className="group relative flex flex-col justify-between rounded-2xl bg-black/85 backdrop-blur-md transition-all duration-300 overflow-hidden border-2 border-[#A08A56] shadow-[0_0_25px_-5px_rgba(160,138,86,0.25)] hover:shadow-[0_0_35px_-5px_rgba(160,138,86,0.4)]"
     >
       {/* Top Section: Cover Image + Badge */}
       <div>
@@ -110,11 +106,7 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
       <div className="p-6 pt-0">
         <Link
           href={`/planes/${plan.slug}`}
-          className={`w-full min-h-[48px] px-5 py-3.5 rounded-lg flex items-center justify-center gap-2 text-xs uppercase tracking-[0.15em] transition-all duration-200 ${
-            isFeatured
-              ? "bg-[#A08A56] hover:bg-[#B59E68] text-black font-black shadow-lg"
-              : "bg-[#27272A] hover:bg-[#3F3F46] text-[#D4D4D8] border border-[#3F3F46] font-bold"
-          }`}
+          className="w-full min-h-[48px] px-5 py-3.5 rounded-lg flex items-center justify-center gap-2 text-xs uppercase tracking-[0.15em] transition-all duration-200 bg-[#A08A56] hover:bg-[#B59E68] text-black font-black shadow-lg hover:shadow-[0_0_20px_rgba(160,138,86,0.4)]"
         >
           <span>{ctaLabel}</span>
           <ArrowRight className="w-4 h-4" />
