@@ -256,12 +256,11 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
               key={videoUrl}
               src={videoUrl}
               poster={resolveMediaUrl(catalogExercise?.thumbnail_url) || undefined}
-              controls
               playsInline
               loop
               muted
               autoPlay
-              className="aspect-video w-full object-cover bg-zinc-950"
+              className="aspect-video w-full object-cover bg-zinc-950 pointer-events-none"
             />
           ) : (
             <div className="aspect-video w-full flex flex-col items-center justify-center bg-zinc-950 p-6 text-center">
