@@ -38,6 +38,7 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
   const [catalogExercise, setCatalogExercise] =
     useState<ExerciseCatalogRow | null>(null);
   const [loadingData, setLoadingData] = useState(true);
+  const [isVerticalVideo, setIsVerticalVideo] = useState(false);
 
   // Stopwatch state
   const [secondsElapsed, setSecondsElapsed] = useState(0);
@@ -155,6 +156,10 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
       prescription?.video_path
   );
 
+  useEffect(() => {
+    setIsVerticalVideo(Boolean(videoUrl && /calentamiento/i.test(videoUrl)));
+  }, [videoUrl]);
+
   const formatTime = (totalSec: number) => {
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
@@ -251,24 +256,66 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
         </header>
 
         {/* Video Player Container */}
-        <div className="overflow-hidden rounded-2xl border border-white/15 bg-black shadow-2xl">
+        <div
+          className={`relative overflow-hidden rounded-2xl border border-white/15 bg-black shadow-2xl transition-all duration-300 ${
+            isVerticalVideo ? "aspect-[4/5] sm:aspect-video" : "aspect-video"
+          }`}
+        >
           {loadingData ? (
-            <div className="aspect-video w-full flex items-center justify-center text-xs font-bold uppercase tracking-widest text-zinc-500">
+            <div className="h-full w-full flex items-center justify-center text-xs font-bold uppercase tracking-widest text-zinc-500">
               CARGANDO VIDEO...
             </div>
           ) : videoUrl ? (
-            <video
-              key={videoUrl}
-              src={videoUrl}
-              poster={resolveMediaUrl(catalogExercise?.thumbnail_url) || undefined}
-              playsInline
-              loop
-              muted
-              autoPlay
-              className="aspect-video w-full object-cover bg-zinc-950 pointer-events-none"
-            />
+            isVerticalVideo ? (
+              <div className="relative w-full h-full overflow-hidden flex items-center justify-center bg-black">
+                {/* Ambient Blurred Background Layer */}
+                <video
+                  src={videoUrl}
+                  aria-hidden="true"
+                  playsInline
+                  loop
+                  muted
+                  autoPlay
+                  className="absolute inset-0 w-full h-full object-cover blur-2xl scale-125 opacity-35 pointer-events-none"
+                />
+                {/* Crisp Foreground Vertical Video */}
+                <video
+                  key={videoUrl}
+                  src={videoUrl}
+                  poster={resolveMediaUrl(catalogExercise?.thumbnail_url) || undefined}
+                  playsInline
+                  loop
+                  muted
+                  autoPlay
+                  onLoadedMetadata={(e) => {
+                    const v = e.currentTarget;
+                    if (v.videoHeight > v.videoWidth) {
+                      setIsVerticalVideo(true);
+                    }
+                  }}
+                  className="relative z-10 max-h-full max-w-full object-contain pointer-events-none"
+                />
+              </div>
+            ) : (
+              <video
+                key={videoUrl}
+                src={videoUrl}
+                poster={resolveMediaUrl(catalogExercise?.thumbnail_url) || undefined}
+                playsInline
+                loop
+                muted
+                autoPlay
+                onLoadedMetadata={(e) => {
+                  const v = e.currentTarget;
+                  if (v.videoHeight > v.videoWidth) {
+                    setIsVerticalVideo(true);
+                  }
+                }}
+                className="h-full w-full object-cover bg-zinc-950 pointer-events-none"
+              />
+            )
           ) : (
-            <div className="aspect-video w-full flex flex-col items-center justify-center bg-zinc-950 p-6 text-center">
+            <div className="h-full w-full flex flex-col items-center justify-center bg-zinc-950 p-6 text-center">
               <p className="text-xs font-bold uppercase tracking-widest text-[#A08A56] mb-1">
                 EJECUCIÓN TÉCNICA
               </p>
