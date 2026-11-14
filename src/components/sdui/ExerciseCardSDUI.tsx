@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import { Play, CheckCircle2, Dumbbell, Flame } from "lucide-react";
 import { getExerciseSlug, getExerciseThumbnail, type WorkoutExerciseItem } from "@/types/sdui";
@@ -16,6 +18,7 @@ export function ExerciseCardSDUI({
   dayNumber,
   isCompleted = false,
 }: ExerciseCardSDUIProps) {
+  const [imgError, setImgError] = useState(false);
   const slug = getExerciseSlug(exercise);
   const displayName =
     exercise.name ||
@@ -47,10 +50,11 @@ export function ExerciseCardSDUI({
       <div className="flex items-center gap-3.5 min-w-0">
         {/* Left: Video Preview Thumbnail */}
         <div className="relative h-16 w-24 sm:w-28 shrink-0 overflow-hidden rounded-lg bg-zinc-950 border border-white/10 group-hover:border-[#A08A56]/60 transition-colors">
-          {thumbnailUrl ? (
+          {thumbnailUrl && !imgError ? (
             <img
               src={thumbnailUrl}
               alt={displayName}
+              onError={() => setImgError(true)}
               className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-out"
               loading="lazy"
             />

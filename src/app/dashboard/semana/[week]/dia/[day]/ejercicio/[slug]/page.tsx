@@ -44,11 +44,17 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
   const [timerRunning, setTimerRunning] = useState(false);
 
   // Telemetry Form state
-  const [seriesInput, setSeriesInput] = useState("3");
-  const [repsInput, setRepsInput] = useState("10");
-  const [weightInput, setWeightInput] = useState("");
+  const [seriesInput, setSeriesInput] = useState("0");
+  const [repsInput, setRepsInput] = useState("0");
+  const [weightInput, setWeightInput] = useState("0");
   const [validationError, setValidationError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+
+  const formatNumericChange = (val: string, allowDecimal = false) => {
+    if (val === "") return "";
+    if (allowDecimal && /^0\.\d*$/.test(val)) return val;
+    return val.replace(/^0+(?=\d)/, "");
+  };
 
   useEffect(() => {
     if (!loading && !session?.userId) {
@@ -89,21 +95,6 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
           const wData = await workoutRes.json();
           const foundWorkout = (wData.workouts?.[0] || null) as PlanWorkoutRow | null;
           setWorkout(foundWorkout);
-
-          const item = foundWorkout?.exercises?.find(
-            (e) => getExerciseSlug(e) === decodedSlug
-          );
-          if (item) {
-            const rawSets = item.series ?? item.sets;
-            const numericSets = rawSets ? parseInt(String(rawSets), 10) : 3;
-            const numericReps = item.reps ? parseInt(String(item.reps), 10) : 10;
-            if (!isNaN(numericSets) && numericSets > 0) {
-              setSeriesInput(String(numericSets));
-            }
-            if (!isNaN(numericReps) && numericReps > 0) {
-              setRepsInput(String(numericReps));
-            }
-          }
         }
 
         if (exRes.ok) {
@@ -119,7 +110,7 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
     fetchExerciseContext();
   }, [activePlan?.id, weekNumber, dayNumber, decodedSlug]);
 
-  // If user already logged this exercise today, hydrate existing values
+  // If user already logged this exercise today, hydrate existing values; otherwise start at 0
   useEffect(() => {
     if (!workout) return;
     const existingLog = workoutLogs.find((l) => l.workout_id === workout.id);
@@ -128,10 +119,12 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
     );
     if (existingEx && existingEx.sets && existingEx.sets.length > 0) {
       setSeriesInput(String(existingEx.sets.length));
-      setRepsInput(String(existingEx.sets[0].reps_completed || "10"));
-      setWeightInput(
-        existingEx.sets[0].weight_kg ? String(existingEx.sets[0].weight_kg) : ""
-      );
+      setRepsInput(String(existingEx.sets[0].reps_completed ?? 0));
+      setWeightInput(String(existingEx.sets[0].weight_kg ?? 0));
+    } else {
+      setSeriesInput("0");
+      setRepsInput("0");
+      setWeightInput("0");
     }
   }, [workout, workoutLogs, decodedSlug]);
 
@@ -405,11 +398,15 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
               </label>
               <input
                 type="number"
-                min="1"
+                min="0"
                 max="20"
                 value={seriesInput}
-                onChange={(e) => setSeriesInput(e.target.value)}
-                placeholder="Ej: 4"
+                onFocus={(e) => e.target.select()}
+                onChange={(e) => setSeriesInput(formatNumericChange(e.target.value))}
+                onBlur={() => {
+                  if (seriesInput.trim() === "") setSeriesInput("0");
+                }}
+                placeholder="0"
                 className="w-full min-h-[48px] rounded-lg bg-zinc-900 border border-white/15 px-4 text-sm font-bold text-white focus:border-[#A08A56] focus:outline-none"
               />
             </div>
@@ -420,11 +417,15 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
               </label>
               <input
                 type="number"
-                min="1"
+                min="0"
                 max="200"
                 value={repsInput}
-                onChange={(e) => setRepsInput(e.target.value)}
-                placeholder="Ej: 12"
+                onFocus={(e) => e.target.select()}
+                onChange={(e) => setRepsInput(formatNumericChange(e.target.value))}
+                onBlur={() => {
+                  if (repsInput.trim() === "") setRepsInput("0");
+                }}
+                placeholder="0"
                 className="w-full min-h-[48px] rounded-lg bg-zinc-900 border border-white/15 px-4 text-sm font-bold text-white focus:border-[#A08A56] focus:outline-none"
               />
             </div>
@@ -439,7 +440,11 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
                 min="0"
                 max="500"
                 value={weightInput}
-                onChange={(e) => setWeightInput(e.target.value)}
+                onFocus={(e) => e.target.select()}
+                onChange={(e) => setWeightInput(formatNumericChange(e.target.value, true))}
+                onBlur={() => {
+                  if (weightInput.trim() === "") setWeightInput("0");
+                }}
                 placeholder="0"
                 className="w-full min-h-[48px] rounded-lg bg-zinc-900 border border-white/15 px-4 text-sm font-bold text-white focus:border-[#A08A56] focus:outline-none"
               />
