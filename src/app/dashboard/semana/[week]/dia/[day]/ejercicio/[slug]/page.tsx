@@ -138,6 +138,18 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
   const prescription: WorkoutExerciseItem | undefined =
     workout?.exercises?.find((e) => getExerciseSlug(e) === decodedSlug);
 
+  const isPadel =
+    workout?.plan_id === "plan_padel" ||
+    activePlan?.id === "plan_padel" ||
+    activePlan?.slug === "plan-padel" ||
+    activePlan?.slug === "plan_padel";
+
+  const noteModuleTitle = isPadel
+    ? "EXPLICACIÓN DEL EJERCICIO"
+    : prescription?.notes
+    ? "NOTA DE VICKY"
+    : "RECOMENDACIÓN DEL MES";
+
   const displayName =
     prescription?.name ||
     prescription?.name_override ||
@@ -357,13 +369,16 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
           </div>
         </div>
 
-        {/* Vicky's Note / Recommendation Box */}
+        {/* Exercise Explanation / Vicky's Note Box */}
         <div className="rounded-2xl bg-black/80 border border-[#A08A56]/40 p-5 space-y-1.5">
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A08A56] block">
-            {prescription?.notes ? "NOTA DE VICKY" : "RECOMENDACIÓN DEL MES"}
+            {noteModuleTitle}
           </span>
           <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
             {prescription?.notes ||
+              (Array.isArray(catalogExercise?.instructions)
+                ? catalogExercise.instructions.join(" ")
+                : catalogExercise?.instructions) ||
               "Priorizá la técnica y el control de la fase excéntrica antes de subir de carga."}
           </p>
         </div>
