@@ -44,9 +44,7 @@ export default async function PlanDetailPage({ params }: PlanDetailPageProps) {
   const methodologyList = Array.isArray(ui.methodology) ? ui.methodology : [];
   const methodologyText = typeof ui.methodology === "string" ? ui.methodology : null;
   const systemText = typeof ui.system === "string" ? ui.system : null;
-  const durationLabel =
-    ui.duration_badge ||
-    (plan.total_weeks ? `${plan.total_weeks * 7} DÍAS` : null);
+  const durationLabel = ui.duration_badge || null;
 
   const imagePosition = ui.image_position || "center";
 

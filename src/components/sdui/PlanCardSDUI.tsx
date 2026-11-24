@@ -14,9 +14,7 @@ export function PlanCardSDUI({ plan }: PlanCardSDUIProps) {
   const ctaLabel = ui.cta?.label || ui.cta_label || "EMPEZAR AHORA";
   const planTitle = plan.name || plan.title || "PLAN";
   const planSubtitle = ui.subtitle || plan.tagline;
-  const durationLabel =
-    ui.duration_badge ||
-    (plan.total_weeks ? `${plan.total_weeks} SEMANAS` : plan.duration_weeks ? `${plan.duration_weeks} SEMANAS` : null);
+  const durationLabel = ui.duration_badge || null;
 
   const billingLabel =
     plan.billing_type === "mensual" || plan.billing_type === "monthly"
