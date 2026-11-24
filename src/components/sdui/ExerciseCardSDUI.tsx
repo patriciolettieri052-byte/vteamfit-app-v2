@@ -25,9 +25,11 @@ export function ExerciseCardSDUI({
     exercise.name_override ||
     slug.replace(/_/g, " ").replace(/-/g, " ");
 
+  const normalizedCat = (exercise.category || "").toUpperCase();
   const isWarmup =
     exercise.order === 0 ||
-    (exercise.category || "").toUpperCase() === "CALENTAMIENTO";
+    normalizedCat === "CALENTAMIENTO" ||
+    normalizedCat === "PRE-PARTIDO";
   const hasPrescription = Boolean(
     exercise.series || exercise.sets || exercise.reps
   );
