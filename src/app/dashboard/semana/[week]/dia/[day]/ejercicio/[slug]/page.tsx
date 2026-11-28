@@ -157,7 +157,9 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
   );
 
   useEffect(() => {
-    setIsVerticalVideo(Boolean(videoUrl && /calentamiento/i.test(videoUrl)));
+    setIsVerticalVideo(
+      Boolean(videoUrl && /(calentamiento|activacion-padel|circuito[1-5])/i.test(videoUrl))
+    );
   }, [videoUrl]);
 
   const formatTime = (totalSec: number) => {

@@ -51,6 +51,12 @@ export default function PrePartidoPage() {
   const videoUrl = resolveMediaUrl(
     exercise?.video_path || exercise?.video_url
   );
+
+  useEffect(() => {
+    setIsVerticalVideo(
+      Boolean(videoUrl && /(calentamiento|activacion-padel|circuito[1-5])/i.test(videoUrl))
+    );
+  }, [videoUrl]);
   const displayName =
     exercise?.name || "Calentamiento Pre-Partido de Padel";
   const descriptionText =

@@ -10,7 +10,6 @@ import {
   Sparkles,
   Calendar,
   Play,
-  Flame,
 } from "lucide-react";
 import { useVTeamStore } from "@/lib/store";
 import type { PlanWorkoutRow } from "@/types/sdui";
@@ -254,8 +253,12 @@ export default function DashboardPage() {
               className="group flex items-center justify-between gap-4 rounded-xl p-4 bg-black/80 backdrop-blur-md border border-white/10 hover:border-[#A08A56] transition-all duration-200 min-h-[76px]"
             >
               <div className="flex items-center gap-3.5 min-w-0">
-                <div className="flex h-14 w-20 sm:w-24 shrink-0 items-center justify-center rounded-lg bg-zinc-900 border border-white/10 group-hover:border-[#A08A56]/60 transition-colors">
-                  <Flame className="h-6 w-6 text-[#A08A56]" />
+                <div className="relative h-16 w-24 sm:w-28 shrink-0 overflow-hidden rounded-lg bg-zinc-950 border border-white/10 group-hover:border-[#A08A56]/60 transition-colors">
+                  <img
+                    src="/images/thumbnails/activacion-padel.jpg"
+                    alt="Calentamiento Pre-Partido de Padel"
+                    className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ease-out"
+                  />
                 </div>
                 <div className="min-w-0">
                   <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-[#A08A56] mb-1">
