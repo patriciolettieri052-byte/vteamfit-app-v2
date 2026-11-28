@@ -9,6 +9,8 @@ import {
   ChevronDown,
   Sparkles,
   Calendar,
+  Play,
+  Flame,
 } from "lucide-react";
 import { useVTeamStore } from "@/lib/store";
 import type { PlanWorkoutRow } from "@/types/sdui";
@@ -130,6 +132,11 @@ export default function DashboardPage() {
     activePlan?.slug === "entrena-conmigo" ||
     activePlan?.slug === "entrena_conmigo";
 
+  const isPlanPadel =
+    activePlan?.id === "plan_padel" ||
+    activePlan?.slug === "plan-padel" ||
+    activePlan?.slug === "plan_padel";
+
   return (
     <div className="min-h-screen pb-24 flex flex-col">
       <TopBar />
@@ -223,6 +230,49 @@ export default function DashboardPage() {
               className="inline-block text-xs font-black uppercase tracking-widest text-[#A08A56] hover:underline"
             >
               Ver planes →
+            </Link>
+          </section>
+        )}
+
+        {/* 2.5 BLOQUE: PRE-PARTIDO (exclusivo Plan Pádel, disponible cualquier día) */}
+        {isPlanPadel && (
+          <section className="space-y-3">
+            <div className="flex items-center justify-between border-b border-white/10 pb-2">
+              <div className="flex items-center gap-2.5">
+                <span className="h-2 w-2 rounded-full bg-[#A08A56]" />
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#A08A56]">
+                  BLOQUE: PRE-PARTIDO
+                </h3>
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
+                ANTES DE JUGAR
+              </span>
+            </div>
+
+            <Link
+              href="/dashboard/pre-partido"
+              className="group flex items-center justify-between gap-4 rounded-xl p-4 bg-black/80 backdrop-blur-md border border-white/10 hover:border-[#A08A56] transition-all duration-200 min-h-[76px]"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="flex h-14 w-20 sm:w-24 shrink-0 items-center justify-center rounded-lg bg-zinc-900 border border-white/10 group-hover:border-[#A08A56]/60 transition-colors">
+                  <Flame className="h-6 w-6 text-[#A08A56]" />
+                </div>
+                <div className="min-w-0">
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-[#A08A56] mb-1">
+                    PRE-PARTIDO
+                  </span>
+                  <h4 className="text-sm sm:text-base font-black italic uppercase tracking-tight text-white truncate">
+                    Calentamiento Pre-Partido de Padel
+                  </h4>
+                  <p className="text-xs text-zinc-400 truncate mt-0.5">
+                    Activación rápida previa al partido para evitar lesiones y rendir al máximo.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-900 border border-white/10 text-zinc-300 group-hover:border-[#A08A56] group-hover:text-[#A08A56] transition-colors">
+                <Play className="h-4 w-4 fill-current ml-0.5" />
+              </div>
             </Link>
           </section>
         )}
