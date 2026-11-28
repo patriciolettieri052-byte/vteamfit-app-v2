@@ -79,29 +79,42 @@ export default function PrePartidoPage() {
           </Link>
         </div>
 
-        <header className="space-y-1">
-          <span className="inline-block rounded bg-[#A08A56] px-2.5 py-0.5 text-[10px] font-black uppercase tracking-[0.2em] text-black">
-            PRE-PARTIDO
-          </span>
-          <h1
-            className="font-black uppercase italic tracking-tight text-white"
-            style={{ fontSize: "var(--text-heading-1)" }}
-          >
-            {displayName}
-          </h1>
-        </header>
-
-        {/* Video Player Container */}
-        <div
-          className={`relative overflow-hidden rounded-2xl border border-white/15 bg-black shadow-2xl transition-all duration-300 ${
-            isVerticalVideo ? "aspect-[4/5] sm:aspect-video" : "aspect-video"
-          }`}
-        >
-          {loadingExercise ? (
-            <div className="h-full w-full flex items-center justify-center text-xs font-bold uppercase tracking-widest text-zinc-500">
-              CARGANDO VIDEO...
+        {loading || loadingExercise ? (
+          <div className="space-y-6 animate-pulse" aria-busy="true">
+            <div className="space-y-2.5">
+              <div className="h-5 w-28 rounded bg-[#A08A56]/30" />
+              <div className="h-8 sm:h-10 w-3/4 sm:w-2/3 rounded-lg bg-zinc-800/90" />
             </div>
-          ) : videoUrl ? (
+            <div className="aspect-[4/5] sm:aspect-video w-full rounded-2xl border border-white/10 bg-zinc-900/80 flex items-center justify-center">
+              <div className="h-12 w-12 rounded-full bg-zinc-800/90 border border-white/10" />
+            </div>
+            <div className="rounded-2xl bg-black/80 border border-[#A08A56]/25 p-5 sm:p-6 space-y-2.5">
+              <div className="h-3 w-52 rounded bg-[#A08A56]/30" />
+              <div className="h-3.5 w-full rounded bg-zinc-800" />
+              <div className="h-3.5 w-4/5 rounded bg-zinc-800" />
+            </div>
+          </div>
+        ) : (
+          <>
+            <header className="space-y-1">
+              <span className="inline-block rounded bg-[#A08A56] px-2.5 py-0.5 text-[10px] font-black uppercase tracking-[0.2em] text-black">
+                PRE-PARTIDO
+              </span>
+              <h1
+                className="font-black uppercase italic tracking-tight text-white"
+                style={{ fontSize: "var(--text-heading-1)" }}
+              >
+                {displayName}
+              </h1>
+            </header>
+
+            {/* Video Player Container */}
+            <div
+              className={`relative overflow-hidden rounded-2xl border border-white/15 bg-black shadow-2xl transition-all duration-300 ${
+                isVerticalVideo ? "aspect-[4/5] sm:aspect-video" : "aspect-video"
+              }`}
+            >
+              {videoUrl ? (
             isVerticalVideo ? (
               <div className="relative w-full h-full overflow-hidden flex items-center justify-center bg-black">
                 <video
@@ -175,6 +188,8 @@ export default function PrePartidoPage() {
             {descriptionText}
           </p>
         </div>
+          </>
+        )}
       </main>
 
       <BottomNav currentWeek={activeEnrollment?.current_week || 1} />

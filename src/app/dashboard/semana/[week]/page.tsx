@@ -99,8 +99,27 @@ export default function WeekViewPage({ params }: WeekPageProps) {
         </header>
 
         {loading || loadingDays ? (
-          <div className="rounded-2xl bg-black/80 border border-white/10 p-10 text-center text-xs font-bold uppercase tracking-widest text-zinc-400">
-            CARGANDO...
+          <div className="space-y-3.5 animate-pulse" aria-busy="true">
+            {[1, 2, 3, 4, 5, 6].map((idx) => (
+              <div
+                key={idx}
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl p-5 bg-black/85 border border-white/10"
+              >
+                <div className="space-y-2.5 flex-1">
+                  <div className="h-4 w-16 rounded bg-[#A08A56]/35" />
+                  <div className="h-6 w-36 rounded bg-zinc-800" />
+                  <div className="h-3.5 w-48 rounded bg-zinc-900" />
+                  <div className="flex gap-1.5 pt-1">
+                    <div className="h-4 w-20 rounded bg-zinc-900" />
+                    <div className="h-4 w-20 rounded bg-zinc-900" />
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="h-4 w-24 rounded bg-zinc-900" />
+                  <div className="h-5 w-5 rounded bg-zinc-900" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : days.length === 0 ? (
           <div className="rounded-2xl bg-black/80 border border-white/10 p-10 text-center text-sm text-zinc-400">

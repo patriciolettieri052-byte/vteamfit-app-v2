@@ -144,11 +144,19 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
     ? "NOTA DE VICKY"
     : "RECOMENDACIÓN DEL MES";
 
+  const fallbackCleanName = decodedSlug
+    .replace(/_[a-z0-9_-]*tgyo_n\d+$/i, "")
+    .replace(/_d\d+_n\d+$/i, "")
+    .replace(/-o\d+$/i, "")
+    .replace(/[-_]+/g, " ")
+    .trim()
+    .toUpperCase();
+
   const displayName =
     prescription?.name ||
     prescription?.name_override ||
     catalogExercise?.name ||
-    decodedSlug.replace(/_/g, " ").toUpperCase();
+    fallbackCleanName;
 
   const videoUrl = resolveMediaUrl(
     catalogExercise?.video_path ||
@@ -242,6 +250,56 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
           </Link>
         </div>
 
+        {loading || loadingData ? (
+          <div className="space-y-6 animate-pulse" aria-busy="true">
+            {/* Header Skeleton */}
+            <div className="space-y-2.5">
+              <div className="h-5 w-28 rounded bg-[#A08A56]/30" />
+              <div className="h-8 sm:h-10 w-3/4 sm:w-2/3 rounded-lg bg-zinc-800/90" />
+            </div>
+
+            {/* Video Player Skeleton */}
+            <div className="aspect-video w-full rounded-2xl border border-white/10 bg-zinc-900/80 flex items-center justify-center">
+              <div className="h-12 w-12 rounded-full bg-zinc-800/90 border border-white/10" />
+            </div>
+
+            {/* Stopwatch & Target Skeleton */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="h-40 rounded-2xl bg-black/80 border border-white/10 p-5 flex flex-col justify-between">
+                <div className="h-3 w-36 rounded bg-zinc-800" />
+                <div className="h-9 w-28 rounded bg-zinc-800" />
+                <div className="h-10 w-full rounded-lg bg-zinc-800" />
+              </div>
+              <div className="h-40 rounded-2xl bg-black/80 border border-white/10 p-5 flex flex-col justify-between">
+                <div className="h-3 w-32 rounded bg-[#A08A56]/30" />
+                <div className="grid grid-cols-3 gap-2 my-auto">
+                  <div className="h-16 rounded-xl bg-zinc-900 border border-white/5" />
+                  <div className="h-16 rounded-xl bg-zinc-900 border border-white/5" />
+                  <div className="h-16 rounded-xl bg-zinc-900 border border-white/5" />
+                </div>
+              </div>
+            </div>
+
+            {/* Explanation Box Skeleton */}
+            <div className="rounded-2xl bg-black/80 border border-[#A08A56]/25 p-5 space-y-2.5">
+              <div className="h-3 w-44 rounded bg-[#A08A56]/30" />
+              <div className="h-3.5 w-full rounded bg-zinc-800" />
+              <div className="h-3.5 w-4/5 rounded bg-zinc-800" />
+            </div>
+
+            {/* Telemetry Form Skeleton */}
+            <div className="rounded-2xl bg-black/90 border border-white/10 p-6 sm:p-8 space-y-5">
+              <div className="h-4 w-52 rounded bg-zinc-800" />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="h-12 rounded-xl bg-zinc-900" />
+                <div className="h-12 rounded-xl bg-zinc-900" />
+                <div className="h-12 rounded-xl bg-zinc-900" />
+              </div>
+              <div className="h-12 w-full rounded-xl bg-[#A08A56]/30" />
+            </div>
+          </div>
+        ) : (
+          <>
         {/* Header */}
         <header className="space-y-1">
           {prescription?.category && (
@@ -263,11 +321,7 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
             isVerticalVideo ? "aspect-[4/5] sm:aspect-video" : "aspect-video"
           }`}
         >
-          {loadingData ? (
-            <div className="h-full w-full flex items-center justify-center text-xs font-bold uppercase tracking-widest text-zinc-500">
-              CARGANDO VIDEO...
-            </div>
-          ) : videoUrl ? (
+          {videoUrl ? (
             isVerticalVideo ? (
               <div className="relative w-full h-full overflow-hidden flex items-center justify-center bg-black">
                 {/* Ambient Blurred Background Layer */}
@@ -509,6 +563,8 @@ export default function ExercisePlayerPage({ params }: ExercisePageProps) {
             <span>{saving ? "GUARDANDO..." : "GUARDAR Y CONTINUAR"}</span>
           </button>
         </form>
+          </>
+        )}
       </main>
     </div>
   );

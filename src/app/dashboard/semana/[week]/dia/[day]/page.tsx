@@ -152,25 +152,34 @@ export default function DayRoutinePage({ params }: DayPageProps) {
         </div>
 
         <header className="border-b border-white/10 pb-5 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div>
+          <div className="w-full">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#A08A56] mb-1">
               Semana {weekNumber} · Día {dayNumber}
             </p>
-            <h1
-              className="font-black italic uppercase tracking-tight text-white"
-              style={{ fontSize: "var(--text-heading-1)" }}
-            >
-              {dayHeaderTitle}
-            </h1>
-            {dayHeaderSubtitle && (
-              <p className="text-xs sm:text-sm text-zinc-400 mt-2">
-                {dayHeaderSubtitle}
-              </p>
+            {loading || loadingWorkout ? (
+              <div className="space-y-2.5 animate-pulse pt-1">
+                <div className="h-8 sm:h-10 w-44 rounded-lg bg-zinc-800/90" />
+                <div className="h-4 w-56 rounded bg-zinc-900" />
+              </div>
+            ) : (
+              <>
+                <h1
+                  className="font-black italic uppercase tracking-tight text-white"
+                  style={{ fontSize: "var(--text-heading-1)" }}
+                >
+                  {dayHeaderTitle}
+                </h1>
+                {dayHeaderSubtitle && (
+                  <p className="text-xs sm:text-sm text-zinc-400 mt-2">
+                    {dayHeaderSubtitle}
+                  </p>
+                )}
+              </>
             )}
           </div>
 
-          {isDayAlreadySealed && (
-            <div className="inline-flex items-center gap-2 rounded-lg bg-emerald-500/15 border border-emerald-500/40 px-3.5 py-2 text-xs font-black uppercase tracking-widest text-emerald-400">
+          {!loading && !loadingWorkout && isDayAlreadySealed && (
+            <div className="inline-flex items-center gap-2 rounded-lg bg-emerald-500/15 border border-emerald-500/40 px-3.5 py-2 text-xs font-black uppercase tracking-widest text-emerald-400 shrink-0">
               <CheckCircle2 className="h-4 w-4" />
               <span>JORNADA COMPLETADA</span>
             </div>
@@ -178,8 +187,32 @@ export default function DayRoutinePage({ params }: DayPageProps) {
         </header>
 
         {loading || loadingWorkout ? (
-          <div className="rounded-2xl bg-black/80 border border-white/10 p-10 text-center text-xs font-bold uppercase tracking-widest text-zinc-400">
-            CARGANDO...
+          <div className="space-y-8 animate-pulse" aria-busy="true">
+            {[1, 2].map((blockIdx) => (
+              <div key={blockIdx} className="space-y-3">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                  <div className="h-3.5 w-44 rounded bg-[#A08A56]/30" />
+                  <div className="h-3 w-28 rounded bg-zinc-800" />
+                </div>
+                <div className="space-y-2.5">
+                  {[1, 2, 3].map((cardIdx) => (
+                    <div
+                      key={cardIdx}
+                      className="flex items-center justify-between gap-4 rounded-xl p-3 sm:p-3.5 bg-black/80 border border-white/10 min-h-[76px]"
+                    >
+                      <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                        <div className="h-16 w-24 sm:w-28 shrink-0 rounded-lg bg-zinc-900 border border-white/5" />
+                        <div className="space-y-2 flex-1 max-w-md">
+                          <div className="h-2.5 w-24 rounded bg-[#A08A56]/30" />
+                          <div className="h-4 w-3/4 rounded bg-zinc-800" />
+                        </div>
+                      </div>
+                      <div className="h-9 w-9 shrink-0 rounded-full bg-zinc-900 border border-white/5" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         ) : !workout || exercises.length === 0 ? (
           <div className="rounded-2xl bg-black/80 border border-white/10 p-10 text-center text-sm text-zinc-400">
